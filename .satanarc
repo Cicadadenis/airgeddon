@@ -1,8 +1,8 @@
 #Enabled true / Disabled false - Auto update feature (it has no effect on development mode) - Default value true
 SATANA_AUTO_UPDATE=true
 
-#Enabled true / Disabled false - Skip intro (it has no effect on development mode) - Default value false
-SATANA_SKIP_INTRO=false
+#Enabled true / Disabled false - Skip intro (it has no effect on development mode) - Default value true
+SATANA_SKIP_INTRO=true
 
 #Enabled true / Disabled false - Allow colorized output - Default value true
 SATANA_BASIC_COLORS=true
@@ -37,5 +37,5 @@ SATANA_DEVELOPMENT_MODE=false
 #Enabled true / Disabled false - Debug mode for development printing debug information - Default value false
 SATANA_DEBUG_MODE=false
 
-#Available values: xterm, tmux - Define the needed tool to be used for windows handling - Default value xterm
-SATANA_WINDOWS_HANDLING=xterm
+#Available values: xterm, tmux - Define the needed tool to be used for windows handling - Default value tmux
+SATANA_WINDOWS_HANDLING=tmux

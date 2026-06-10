@@ -822,19 +822,281 @@ function check_to_set_monitor() {
 	return 0
 }
 
+#Get interface mode in lowercase from iw output
+function get_interface_mode() {
+
+	debug_print
+
+	iw "${1}" info 2> /dev/null | awk '/^[[:space:]]+type / {print tolower($2); exit}'
+}
+
+#Check if an interface name is a valid wifi card
+function is_valid_wifi_interface() {
+
+	debug_print
+
+	[ -n "${1}" ] && [ -d "/sys/class/net/${1}" ] && check_interface_wifi "${1}"
+}
+
+#Find a monitor mode interface associated to the same phy as a reference interface
+function find_monitor_interface_by_phy() {
+
+	debug_print
+
+	local ref_iface="${1}"
+	local phy
+	local iface
+	local mode
+
+	phy=$(physical_interface_finder "${ref_iface}")
+	[ -z "${phy}" ] && return 1
+
+	while read -r iface; do
+		[ "$(physical_interface_finder "${iface}")" = "${phy}" ] || continue
+		mode=$(get_interface_mode "${iface}")
+		if [ "${mode}" = "monitor" ]; then
+			echo "${iface}"
+			return 0
+		fi
+	done < <(iw dev 2> /dev/null | awk '/Interface/ {print $2}')
+
+	return 1
+}
+
+#Parse airmon-ng start output and return the monitor interface name
+function parse_airmon_start_output() {
+
+	debug_print
+
+	local old_interface="${1}"
+	local airmon_output="${2}"
+	local candidate
+
+	if [[ ${airmon_output} =~ \(mac80211[[:space:]]monitor[[:space:]]mode[[:space:]]vif[[:space:]]enabled[[:space:]]for[[:space:]]\[phy[0-9]+\][A-Za-z0-9._-]+[[:space:]]on[[:space:]]\[phy[0-9]+\]([A-Za-z0-9._-]+)\) ]]; then
+		candidate="${BASH_REMATCH[1]}"
+	elif [[ ${airmon_output} =~ \(monitor[[:space:]]mode[[:space:]]enabled[[:space:]]on[[:space:]]([A-Za-z0-9._-]+)\) ]]; then
+		candidate="${BASH_REMATCH[1]}"
+	elif [[ ${airmon_output} =~ \(monitor[[:space:]]mode[[:space:]]enabled\) ]]; then
+		candidate="${old_interface}"
+	else
+		candidate=$(echo "${airmon_output}" | grep -oE 'phy[0-9]+[[:space:]]+[A-Za-z0-9][A-Za-z0-9._-]*' | awk '{print $2}' | tail -n 1)
+	fi
+
+	if is_valid_wifi_interface "${candidate}" && [ "$(get_interface_mode "${candidate}")" = "monitor" ]; then
+		echo "${candidate}"
+		return 0
+	fi
+
+	if is_valid_wifi_interface "${old_interface}" && [ "$(get_interface_mode "${old_interface}")" = "monitor" ]; then
+		echo "${old_interface}"
+		return 0
+	fi
+
+	candidate=$(find_monitor_interface_by_phy "${old_interface}")
+	if [ -n "${candidate}" ]; then
+		echo "${candidate}"
+		return 0
+	fi
+
+	return 1
+}
+
+#Get the base interface name when airmon appended the mon suffix
+function get_base_wifi_interface_name() {
+
+	debug_print
+
+	local iface="${1}"
+
+	if [[ "${iface}" =~ mon$ ]] && is_valid_wifi_interface "${iface%mon}"; then
+		echo "${iface%mon}"
+	else
+		echo "${iface}"
+	fi
+}
+
+#Clear or recover a stale selected interface name
+function validate_selected_interface() {
+
+	debug_print
+
+	local base_iface
+	local recovered
+
+	if [ -z "${interface}" ]; then
+		return 1
+	fi
+
+	if is_valid_wifi_interface "${interface}"; then
+		return 0
+	fi
+
+	base_iface=$(get_base_wifi_interface_name "${interface}")
+	recovered=$(find_monitor_interface_by_phy "${base_iface}")
+
+	if [ -n "${recovered}" ]; then
+		interface="${recovered}"
+	elif is_valid_wifi_interface "${base_iface}"; then
+		interface="${base_iface}"
+	else
+		interface=""
+		ifacemode=""
+		current_iface_on_messages=""
+		return 1
+	fi
+
+	phy_interface=$(physical_interface_finder "${interface}")
+	check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
+	check_interface_mode "${interface}"
+	current_iface_on_messages="${interface}"
+	return 0
+}
+
+#Restore managed mode keeping the same interface name when monitor was enabled in-place
+function restore_managed_mode_interface() {
+
+	debug_print
+
+	local iface="${1}"
+	local airmon_stop_output
+	local mode_after_stop
+	local parsed_iface
+
+	if [ "$(get_interface_mode "${iface}")" != "monitor" ]; then
+		echo "${iface}"
+		return 0
+	fi
+
+	airmon_stop_output=$(${airmon} stop "${iface}" 2> /dev/null)
+	mode_after_stop=$(get_interface_mode "${iface}")
+
+	if [ "${mode_after_stop}" = "managed" ]; then
+		echo "${iface}"
+		return 0
+	fi
+
+	parsed_iface=$(echo "${airmon_stop_output}" | grep station | head -n 1)
+	[[ ${parsed_iface} =~ \]?([A-Za-z0-9._-]+)\)?$ ]] && parsed_iface="${BASH_REMATCH[1]}"
+
+	if is_valid_wifi_interface "${parsed_iface}"; then
+		echo "${parsed_iface}"
+		return 0
+	fi
+
+	if set_mode_without_airmon "${iface}" "managed"; then
+		echo "${iface}"
+		return 0
+	fi
+
+	return 1
+}
+
+#Try to fix a broken monitor interface state before running attacks
+function repair_broken_monitor_interface() {
+
+	debug_print
+
+	local iface
+	local base_iface
+	local airmon_start_output
+	local new_iface
+
+	validate_selected_interface || return 1
+	iface="${interface}"
+	base_iface=$(get_base_wifi_interface_name "${iface}")
+
+	if check_monitor_enabled "${iface}"; then
+		return 0
+	fi
+
+	if is_valid_wifi_interface "${iface}" && [ "$(get_interface_mode "${iface}")" != "monitor" ]; then
+		${airmon} stop "${iface}" > /dev/null 2>&1
+		iface="${base_iface}"
+	fi
+
+	if ! is_valid_wifi_interface "${iface}"; then
+		iface="${base_iface}"
+	fi
+
+	if ! is_valid_wifi_interface "${iface}"; then
+		return 1
+	fi
+
+	disable_rfkill
+	if [ "${check_kill_needed}" -eq 1 ]; then
+		${airmon} check kill > /dev/null 2>&1
+		nm_processes_killed=1
+	fi
+	ip link set "${iface}" up > /dev/null 2>&1
+
+	airmon_start_output=$(${airmon} start "${iface}" 2>&1)
+	new_iface=$(parse_airmon_start_output "${iface}" "${airmon_start_output}")
+
+	if [ -z "${new_iface}" ]; then
+		if set_mode_without_airmon "${iface}" "monitor"; then
+			new_iface="${iface}"
+		else
+			new_iface=$(find_monitor_interface_by_phy "${iface}")
+		fi
+	fi
+
+	if [ -z "${new_iface}" ]; then
+		return 1
+	fi
+
+	interface="${new_iface}"
+	phy_interface=$(physical_interface_finder "${interface}")
+	check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
+	check_interface_mode "${interface}"
+	current_iface_on_messages="${interface}"
+	ifacemode="Monitor"
+	check_monitor_enabled "${interface}"
+}
+
+#Keep interface variable aligned with the actual monitor interface
+function sync_monitor_interface_reference() {
+
+	debug_print
+
+	local ref_iface="${1}"
+	local monitor_iface
+
+	if is_valid_wifi_interface "${ref_iface}" && [ "$(get_interface_mode "${ref_iface}")" = "monitor" ]; then
+		interface="${ref_iface}"
+		current_iface_on_messages="${interface}"
+		return 0
+	fi
+
+	monitor_iface=$(find_monitor_interface_by_phy "${ref_iface}")
+	if [ -n "${monitor_iface}" ]; then
+		interface="${monitor_iface}"
+		phy_interface=$(physical_interface_finder "${interface}")
+		check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
+		current_iface_on_messages="${interface}"
+		return 0
+	fi
+
+	return 1
+}
+
 #Check for monitor mode on an interface
 function check_monitor_enabled() {
 
 	debug_print
 
-	mode=$(iw "${1}" info 2> /dev/null | grep type | awk '{print $2}')
+	local iface="${1}"
 
-	current_iface_on_messages="${1}"
-
-	if [[ ${mode^} != "Monitor" ]]; then
-		return 1
+	if ! is_valid_wifi_interface "${iface}" || [ "$(get_interface_mode "${iface}")" != "monitor" ]; then
+		sync_monitor_interface_reference "${iface}"
+		iface="${interface}"
 	fi
-	return 0
+
+	current_iface_on_messages="${iface}"
+
+	if is_valid_wifi_interface "${iface}" && [ "$(get_interface_mode "${iface}")" = "monitor" ]; then
+		return 0
+	fi
+	return 1
 }
 
 #Check if an interface is a wifi card or not
@@ -1323,11 +1585,11 @@ function prepare_et_interface() {
 		check_airmon_compatibility "interface"
 		if [ "${interface_airmon_compatible}" -eq 1 ]; then
 
-			new_interface=$(${airmon} stop "${interface}" 2> /dev/null | grep station | head -n 1)
+			new_interface=$(restore_managed_mode_interface "${interface}")
 			ifacemode="Managed"
-			[[ ${new_interface} =~ \]?([A-Za-z0-9]+)\)?$ ]] && new_interface="${BASH_REMATCH[1]}"
+			check_interface_mode "${new_interface}"
 
-			if [ "${interface}" != "${new_interface}" ]; then
+			if [ -n "${new_interface}" ] && [ "${interface}" != "${new_interface}" ] && is_valid_wifi_interface "${new_interface}"; then
 				if check_interface_coherence; then
 					interface=${new_interface}
 					phy_interface=$(physical_interface_finder "${interface}")
@@ -1336,6 +1598,8 @@ function prepare_et_interface() {
 				fi
 				echo
 				language_strings "${language}" 15 "yellow"
+			else
+				current_iface_on_messages="${interface}"
 			fi
 		else
 			if ! set_mode_without_airmon "${interface}" "managed"; then
@@ -1369,9 +1633,9 @@ function restore_et_interface() {
 		ifacemode="Managed"
 	else
 		if [ "${interface_airmon_compatible}" -eq 1 ]; then
-			new_interface=$(${airmon} start "${interface}" 2> /dev/null | grep monitor)
+			airmon_start_output=$(${airmon} start "${interface}" 2> /dev/null)
 			desired_interface_name=""
-			[[ ${new_interface} =~ ^You[[:space:]]already[[:space:]]have[[:space:]]a[[:space:]]([A-Za-z0-9]+)[[:space:]]device ]] && desired_interface_name="${BASH_REMATCH[1]}"
+			[[ ${airmon_start_output} =~ ^You[[:space:]]already[[:space:]]have[[:space:]]a[[:space:]]([A-Za-z0-9]+)[[:space:]]device ]] && desired_interface_name="${BASH_REMATCH[1]}"
 			if [ -n "${desired_interface_name}" ]; then
 				echo
 				language_strings "${language}" 435 "red"
@@ -1379,10 +1643,15 @@ function restore_et_interface() {
 				return
 			fi
 
+			new_interface=$(parse_airmon_start_output "${interface}" "${airmon_start_output}")
+			if [ -z "${new_interface}" ]; then
+				set_mode_without_airmon "${interface}" "monitor" > /dev/null 2>&1
+				new_interface="${interface}"
+			fi
+
 			ifacemode="Monitor"
 
-			[[ ${new_interface} =~ \]?([A-Za-z0-9]+)\)?$ ]] && new_interface="${BASH_REMATCH[1]}"
-			if [ "${interface}" != "${new_interface}" ]; then
+			if [ "${interface}" != "${new_interface}" ] && is_valid_wifi_interface "${new_interface}"; then
 				interface=${new_interface}
 				phy_interface=$(physical_interface_finder "${interface}")
 				check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
@@ -1431,11 +1700,11 @@ function managed_option() {
 				ifacemode="Managed"
 			fi
 		else
-			new_interface=$(${airmon} stop "${1}" 2> /dev/null | grep station | head -n 1)
+			new_interface=$(restore_managed_mode_interface "${1}")
 			ifacemode="Managed"
-			[[ ${new_interface} =~ \]?([A-Za-z0-9]+)\)?$ ]] && new_interface="${BASH_REMATCH[1]}"
+			check_interface_mode "${new_interface}"
 
-			if [ "${interface}" != "${new_interface}" ]; then
+			if [ -n "${new_interface}" ] && [ "${interface}" != "${new_interface}" ] && is_valid_wifi_interface "${new_interface}"; then
 				if check_interface_coherence; then
 					interface=${new_interface}
 					phy_interface=$(physical_interface_finder "${interface}")
@@ -1444,6 +1713,8 @@ function managed_option() {
 				fi
 				echo
 				language_strings "${language}" 15 "yellow"
+			else
+				current_iface_on_messages="${interface}"
 			fi
 		fi
 	else
@@ -1455,10 +1726,9 @@ function managed_option() {
 				return 1
 			fi
 		else
-			new_secondary_interface=$(${airmon} stop "${1}" 2> /dev/null | grep station | head -n 1)
-			[[ ${new_secondary_interface} =~ \]?([A-Za-z0-9]+)\)?$ ]] && new_secondary_interface="${BASH_REMATCH[1]}"
+			new_secondary_interface=$(restore_managed_mode_interface "${1}")
 
-			if [ "${1}" != "${new_secondary_interface}" ]; then
+			if [ -n "${new_secondary_interface}" ] && [ "${1}" != "${new_secondary_interface}" ] && is_valid_wifi_interface "${new_secondary_interface}"; then
 				secondary_wifi_interface=${new_secondary_interface}
 				current_iface_on_messages="${secondary_wifi_interface}"
 				echo
@@ -1489,46 +1759,60 @@ function monitor_option() {
 
 	if [ "${1}" = "${interface}" ]; then
 		check_airmon_compatibility "interface"
-		if [ "${interface_airmon_compatible}" -eq 0 ]; then
-			if ! set_mode_without_airmon "${1}" "monitor"; then
-				echo
-				language_strings "${language}" 20 "red"
-				language_strings "${language}" 115 "read"
-				return 1
+
+		if [ "${check_kill_needed}" -eq 1 ]; then
+			language_strings "${language}" 19 "blue"
+			${airmon} check kill > /dev/null 2>&1
+			nm_processes_killed=1
+		fi
+
+		desired_interface_name=""
+		airmon_start_output=$(${airmon} start "${1}" 2>&1)
+		[[ ${airmon_start_output} =~ ^You[[:space:]]already[[:space:]]have[[:space:]]a[[:space:]]([A-Za-z0-9]+)[[:space:]]device ]] && desired_interface_name="${BASH_REMATCH[1]}"
+		new_interface=$(parse_airmon_start_output "${1}" "${airmon_start_output}")
+
+		if [ -n "${desired_interface_name}" ]; then
+			echo
+			language_strings "${language}" 435 "red"
+			language_strings "${language}" 115 "read"
+			return 1
+		fi
+
+		if [ -z "${new_interface}" ]; then
+			if set_mode_without_airmon "${1}" "monitor"; then
+				new_interface="${1}"
 			else
-				ifacemode="Monitor"
+				new_interface=$(find_monitor_interface_by_phy "${1}")
 			fi
-		else
-			if [ "${check_kill_needed}" -eq 1 ]; then
-				language_strings "${language}" 19 "blue"
-				${airmon} check kill > /dev/null 2>&1
-				nm_processes_killed=1
+		fi
+
+		if [ -z "${new_interface}" ]; then
+			echo
+			language_strings "${language}" 20 "red"
+			language_strings "${language}" 115 "read"
+			return 1
+		fi
+
+		if [ "${interface}" != "${new_interface}" ] && is_valid_wifi_interface "${new_interface}"; then
+			if check_interface_coherence; then
+				interface="${new_interface}"
+				phy_interface=$(physical_interface_finder "${interface}")
+				check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
 			fi
+			current_iface_on_messages="${interface}"
+			echo
+			language_strings "${language}" 21 "yellow"
+		elif [ "${interface}" = "${new_interface}" ]; then
+			current_iface_on_messages="${interface}"
+			check_interface_mode "${interface}"
+		fi
 
-			desired_interface_name=""
-			new_interface=$(${airmon} start "${1}" 2> /dev/null | grep monitor)
-			[[ ${new_interface} =~ ^You[[:space:]]already[[:space:]]have[[:space:]]a[[:space:]]([A-Za-z0-9]+)[[:space:]]device ]] && desired_interface_name="${BASH_REMATCH[1]}"
-
-			if [ -n "${desired_interface_name}" ]; then
-				echo
-				language_strings "${language}" 435 "red"
-				language_strings "${language}" 115 "read"
-				return 1
-			fi
-
+		if is_valid_wifi_interface "${new_interface}" && [ "$(get_interface_mode "${new_interface}")" = "monitor" ]; then
+			interface="${new_interface}"
+			phy_interface=$(physical_interface_finder "${interface}")
+			check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
+			current_iface_on_messages="${interface}"
 			ifacemode="Monitor"
-			[[ ${new_interface} =~ \]?([A-Za-z0-9]+)\)?$ ]] && new_interface="${BASH_REMATCH[1]}"
-
-			if [ "${interface}" != "${new_interface}" ]; then
-				if check_interface_coherence; then
-					interface="${new_interface}"
-					phy_interface=$(physical_interface_finder "${interface}")
-					check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
-				fi
-				current_iface_on_messages="${interface}"
-				echo
-				language_strings "${language}" 21 "yellow"
-			fi
 		fi
 	else
 		check_airmon_compatibility "secondary_interface"
@@ -1547,8 +1831,9 @@ function monitor_option() {
 			fi
 
 			secondary_interface_airmon_compatible=1
-			new_secondary_interface=$(${airmon} start "${1}" 2> /dev/null | grep monitor)
-			[[ ${new_secondary_interface} =~ ^You[[:space:]]already[[:space:]]have[[:space:]]a[[:space:]]([A-Za-z0-9]+)[[:space:]]device ]] && desired_interface_name="${BASH_REMATCH[1]}"
+			airmon_start_output=$(${airmon} start "${1}" 2> /dev/null)
+			[[ ${airmon_start_output} =~ ^You[[:space:]]already[[:space:]]have[[:space:]]a[[:space:]]([A-Za-z0-9]+)[[:space:]]device ]] && desired_interface_name="${BASH_REMATCH[1]}"
+			new_secondary_interface=$(parse_airmon_start_output "${1}" "${airmon_start_output}")
 
 			if [ -n "${desired_interface_name}" ]; then
 				echo
@@ -1557,9 +1842,17 @@ function monitor_option() {
 				return 1
 			fi
 
-			[[ ${new_secondary_interface} =~ \]?([A-Za-z0-9]+)\)?$ ]] && new_secondary_interface="${BASH_REMATCH[1]}"
+			if [ -z "${new_secondary_interface}" ]; then
+				if ! set_mode_without_airmon "${1}" "monitor"; then
+					echo
+					language_strings "${language}" 20 "red"
+					language_strings "${language}" 115 "read"
+					return 1
+				fi
+				new_secondary_interface="${1}"
+			fi
 
-			if [ "${1}" != "${new_secondary_interface}" ]; then
+			if [ "${1}" != "${new_secondary_interface}" ] && is_valid_wifi_interface "${new_secondary_interface}"; then
 				secondary_wifi_interface="${new_secondary_interface}"
 				current_iface_on_messages="${secondary_wifi_interface}"
 				echo
@@ -1567,6 +1860,19 @@ function monitor_option() {
 			fi
 		fi
 	fi
+
+	sync_monitor_interface_reference "${interface}"
+
+	if ! check_monitor_enabled "${interface}"; then
+		if ! repair_broken_monitor_interface; then
+			echo
+			language_strings "${language}" 20 "red"
+			language_strings "${language}" 115 "read"
+			return 1
+		fi
+	fi
+
+	ifacemode="Monitor"
 
 	echo
 	language_strings "${language}" 22 "yellow"
@@ -1612,16 +1918,16 @@ function check_interface_mode() {
 		return 0
 	fi
 
-	modemanaged=$(iw "${1}" info 2> /dev/null | grep type | awk '{print $2}')
+	modemanaged=$(get_interface_mode "${1}")
 
-	if [[ ${modemanaged^} = "Managed" ]]; then
+	if [ "${modemanaged}" = "managed" ]; then
 		ifacemode="Managed"
 		return 0
 	fi
 
-	modemonitor=$(iw "${1}" info 2> /dev/null | grep type | awk '{print $2}')
+	modemonitor=$(get_interface_mode "${1}")
 
-	if [[ ${modemonitor^} = "Monitor" ]]; then
+	if [ "${modemonitor}" = "monitor" ]; then
 		ifacemode="Monitor"
 		return 0
 	fi
@@ -2483,6 +2789,8 @@ function select_interface() {
 						interface_menu_band+="${band_24ghz}, ${band_5ghz}"
 					;;
 				esac
+				check_interface_mode "${item}"
+				interface_menu_band+="${blue_color} // ${yellow_color}Mode:${normal_color} ${ifacemode}"
 			fi
 			echo -e "${interface_menu_band} ${blue_color}// ${yellow_color}Chipset:${normal_color} ${chipset}"
 		fi
@@ -4901,6 +5209,8 @@ function print_options() {
 function print_iface_selected() {
 
 	debug_print
+
+	validate_selected_interface > /dev/null 2>&1
 
 	if [ -z "${interface}" ]; then
 		language_strings "${language}" 41 "red"
@@ -9475,10 +9785,13 @@ function set_enterprise_control_script() {
 				ifacemode="Managed"
 			else
 				if [ "${interface_airmon_compatible}" -eq 1 ]; then
-					new_interface=$(${airmon} start "${interface}" 2> /dev/null | grep monitor)
-
-					[[ ${new_interface} =~ \]?([A-Za-z0-9]+)\)?$ ]] && new_interface="${BASH_REMATCH[1]}"
-					if [ "${interface}" != "${new_interface}" ]; then
+					airmon_start_output=$(${airmon} start "${interface}" 2> /dev/null)
+					new_interface=$(parse_airmon_start_output "${interface}" "${airmon_start_output}")
+					if [ -z "${new_interface}" ]; then
+						set_mode_without_airmon "${interface}" "monitor" > /dev/null 2>&1
+						new_interface="${interface}"
+					fi
+					if [ "${interface}" != "${new_interface}" ] && is_valid_wifi_interface "${new_interface}"; then
 						interface=${new_interface}
 						phy_interface=$(basename "$(readlink "/sys/class/net/${interface}/phy80211")" 2> /dev/null)
 						current_iface_on_messages="${interface}"
@@ -11739,6 +12052,13 @@ function explore_for_targets_option() {
 	echo
 	language_strings "${language}" 103 "title"
 	language_strings "${language}" 65 "green"
+
+	validate_selected_interface
+	sync_monitor_interface_reference "${interface}"
+
+	if ! check_monitor_enabled "${interface}"; then
+		repair_broken_monitor_interface
+	fi
 
 	if ! check_monitor_enabled "${interface}"; then
 		echo
@@ -14153,14 +14473,14 @@ function env_vars_initialization() {
 
 	declare -gA nonboolean_options_env_vars
 	nonboolean_options_env_vars["${ordered_options_env_vars[9]},default_value"]="mdk4" #mdk_version
-	nonboolean_options_env_vars["${ordered_options_env_vars[13]},default_value"]="xterm" #windows_handling
+	nonboolean_options_env_vars["${ordered_options_env_vars[13]},default_value"]="tmux" #windows_handling
 
 	nonboolean_options_env_vars["${ordered_options_env_vars[9]},rcfile_text"]="#Available values: mdk3, mdk4 - Define which mdk version is going to be used - Default value ${nonboolean_options_env_vars[${ordered_options_env_vars[9]},'default_value']}"
 	nonboolean_options_env_vars["${ordered_options_env_vars[13]},rcfile_text"]="#Available values: xterm, tmux - Define the needed tool to be used for windows handling - Default value ${nonboolean_options_env_vars[${ordered_options_env_vars[13]},'default_value']}"
 
 	declare -gA boolean_options_env_vars
 	boolean_options_env_vars["${ordered_options_env_vars[0]},default_value"]="true" #auto_update
-	boolean_options_env_vars["${ordered_options_env_vars[1]},default_value"]="false" #skip_intro
+	boolean_options_env_vars["${ordered_options_env_vars[1]},default_value"]="true" #skip_intro
 	boolean_options_env_vars["${ordered_options_env_vars[2]},default_value"]="true" #basic_colors
 	boolean_options_env_vars["${ordered_options_env_vars[3]},default_value"]="true" #extended_colors
 	boolean_options_env_vars["${ordered_options_env_vars[4]},default_value"]="false" #auto_change_language
@@ -14247,6 +14567,11 @@ function env_vars_values_validation() {
 			fi
 		fi
 	done
+
+	if [ "${SATANA_WINDOWS_HANDLING}" = "xterm" ] && [ -z "${DISPLAY}" ] && hash tmux 2> /dev/null; then
+		SATANA_WINDOWS_HANDLING="tmux"
+		export SATANA_WINDOWS_HANDLING
+	fi
 
 	if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 		if hash tmux 2> /dev/null; then
