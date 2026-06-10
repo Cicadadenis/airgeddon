@@ -1,9 +1,3 @@
-sudo apt install figlet -y
-
-figlet Bednakov-Xack-Live
-
-sleep 3
-
 sudo apt install sslstrip -y
 
 sudo apt install asleap -y
@@ -18,6 +12,6 @@ sudo apt install beef-xss -y
 
 sudo apt install lighttpd -y
 
-chmod +x airgeddon.sh 
+chmod +x satana.sh 
 
-./airgeddon.sh
+./satana.sh

@@ -30,7 +30,7 @@
 
 ### 9.21
  - Fixed non-closing windows on some DoS pursuit mode attacks
- - Added retrocompatibility for mdk3, added option in .airgeddonrc file to handle it
+ - Added retrocompatibility for mdk3, added option in .satanarc file to handle it
  - Fixed bug on WEP all-in-one attack (Fake Auth) for SSIDs containing spaces
  - Fixed repeated enterprise plain passwords captured on trophy files
  - Added custom certificates creation for enterprise attacks
@@ -44,7 +44,7 @@
  - Fixed error shown on enterprise attacks for some wifi cards
  - Fixed BeEF error due forced config file changes on BeEF 0.4.7.1 and 0.4.7.2 versions
  - Added ipv6 support for BeEF
- - Options .airgeddonrc file now also updated on automatic update keeping user's preferences
+ - Options .satanarc file now also updated on automatic update keeping user's preferences
 
 ### 9.10
  - Mdk3 replaced by Mdk4
@@ -157,7 +157,7 @@
 ### 7.01
  - Fixed bug while changing interface mode if the destination interface name is in use
  - Removed util-linux dependency for rev use
- - The existing iptables rules before the launch of airgeddon are now restored upon exiting if modified
+ - The existing iptables rules before the launch of satana are now restored upon exiting if modified
  - Fixed bug while checking for NetworkManager's version on some linux distributions
  - Tested compatibility with Kali Linux 2017.1 and Parrot 3.5
  - Dockerfile updated
@@ -170,7 +170,7 @@
 ### 6.21
  - Improved chipset detection, lsusb added to internal tools
  - Improved internet checking. Now more methods, not only icmp
- - Fixed error executing airgeddon after auto-update on some distros
+ - Fixed error executing satana after auto-update on some distros
  - Added LICENSE.md and README.md files to Kali package
 
 ### 6.2
@@ -396,7 +396,7 @@
  - New offline password decrypt menu
  - Aircrack option to perform dictionary/bruteforce attacks against capture files
  - Removed autoclean after capturing a Handshake file
- - Changed version var to airgeddon_version for future version check (auto-update feature)
+ - Changed version var to satana_version for future version check (auto-update feature)
 
 ### 3.11
  - Optional autoclean captured Handshake file feature

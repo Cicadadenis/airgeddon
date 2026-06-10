@@ -1,33 +1,13 @@
-# airgeddon
+# satana
 Очень опасное  приложение в руках Хакера 
-
-
-<p align="center">
-  <img src="https://github.com/bednakovdenis/airgeddon/blob/master/Contact/logo%201.png">
-</p>
-
-<p align="center">
-  <img src="https://github.com/bednakovdenis/airgeddon/blob/master/Contact/Logo2.png">
-</p>
-
-<p align="center">
-  <img src="https://github.com/bednakovdenis/airgeddon/blob/master/Contact/Logo3.png">
-</p>
 
 # Установка на Linux
 
-1.) git clone https://github.com/bednakovdenis/airgeddon.git
+1.) git clone <repository-url>
 
-2.) cd airgeddon/
+2.) cd satana/
 
-3.) sudo chmod +x airgeddon.sh 
+3.) sudo chmod +x satana.sh 
 
-4.) ./airgeddon.sh               
+4.) ./satana.sh               
 
-
-
-# Контакты 
-
-denisbednakov@gmail.com    Bednakov-Xack-Live 
-
-https://www.facebook.com/Bednakov-Xack-Live-110365023961441                    

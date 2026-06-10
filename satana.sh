@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-#Title........: airgeddon.sh
+#Title........: satana.sh
 #Description..: This is a multi-use bash script for Linux systems to audit wireless networks.
 #Author.......: Bednakov-Xack-Live
 #Version......: 10.01
-#Usage........: bash airgeddon.sh
+#Usage........: bash satana.sh
 #Bash Version.: 4.2 or later
 
 #Global shellcheck disabled warnings
@@ -12,7 +12,7 @@
 
 #Language vars
 #Change this line to select another default language. Select one from available values in array
-language="ENGLISH"
+language="RUSSIAN"
 declare -A lang_association=(
 								["en"]="ENGLISH"
 								["es"]="SPANISH"
@@ -122,7 +122,7 @@ declare -A possible_alias_names=(
 								)
 
 #General vars
-airgeddon_version="10.01"
+satana_version="10.01"
 language_strings_expected_version="10.01-1"
 standardhandshake_filename="handshake-01.cap"
 timeout_capture_handshake="20"
@@ -136,8 +136,8 @@ pending_of_translation="[PoT]"
 escaped_pending_of_translation="\[PoT\]"
 standard_resolution="1024x768"
 curl_404_error="404: Not Found"
-rc_file_name=".airgeddonrc"
-alternative_rc_file_name="airgeddonrc"
+rc_file_name=".satanarc"
+alternative_rc_file_name="satanarc"
 language_strings_file="language_strings.sh"
 broadcast_mac="FF:FF:FF:FF:FF:FF"
 
@@ -199,9 +199,9 @@ timeout_secs_per_pixiedust="30"
 #Repository and contact vars
 repository_hostname="github.com"
 github_user="bednakovdenis"
-github_repository="airgeddon"
+github_repository="satana"
 branch="master"
-script_filename="airgeddon.sh"
+script_filename="satana.sh"
 urlgithub="https://${repository_hostname}/${github_user}/${github_repository}"
 urlscript_directlink="https://raw.githubusercontent.com/${github_user}/${github_repository}/${branch}/${script_filename}"
 urlscript_pins_dbfile="https://raw.githubusercontent.com/${github_user}/${github_repository}/${branch}/${known_pins_dbfile}"
@@ -251,7 +251,7 @@ beef_port="3000"
 beef_control_panel_url="http://${loopback_ip}:${beef_port}/ui/panel"
 jshookfile="hook.js"
 beef_file="ag.beef.conf"
-beef_pass="airgeddon"
+beef_pass="satana"
 beef_db="beef.db"
 beef_default_cfg_file="config.yaml"
 beef_needed_brackets_version="0.4.7.2"
@@ -263,7 +263,7 @@ control_et_file="ag.et_control.sh"
 control_enterprise_file="ag.enterprise_control.sh"
 enterprisedir="enterprise/"
 certsdir="certs/"
-certspass="airgeddon"
+certspass="satana"
 default_certs_path="/etc/hostapd-wpe/certs/"
 default_certs_pass="whatever"
 webserver_file="ag.lighttpd.conf"
@@ -354,8 +354,8 @@ crunch_symbolcharset="!#$%/=?{}[]-*:;"
 hashcat_charsets=("?l" "?u" "?d" "?s")
 
 #Tmux vars
-session_name="airgeddon"
-tmux_main_window="airgeddon-Main"
+session_name="satana"
+tmux_main_window="satana-Main"
 no_hardcore_exit=0
 
 #Check coherence between script and language_strings file
@@ -381,10 +381,10 @@ function check_language_strings() {
 
 		language_strings_handling_messages
 
-		generate_dynamic_line "airgeddon" "title"
+		generate_dynamic_line "satana" "title"
 		if [ "${language_file_found}" -eq 0 ]; then
 			echo_red "${language_strings_no_file[${language}]}"
-			if [ "${airgeddon_version}" = "6.1" ]; then
+			if [ "${satana_version}" = "6.1" ]; then
 				echo
 				echo_yellow "${language_strings_first_time[${language}]}"
 			fi
@@ -482,17 +482,17 @@ function language_strings_handling_messages() {
 	language_strings_file_mismatch["TURKISH"]="Hata. Bulunan çeviri dosyası beklenen sürüm değil"
 
 	declare -gA language_strings_try_to_download
-	language_strings_try_to_download["ENGLISH"]="airgeddon will try to download the language strings file..."
-	language_strings_try_to_download["SPANISH"]="airgeddon intentará descargar el fichero de traducciones..."
-	language_strings_try_to_download["FRENCH"]="airgeddon va essayer de télécharger les fichiers de traductions..."
-	language_strings_try_to_download["CATALAN"]="airgeddon intentarà descarregar el fitxer de traduccions..."
-	language_strings_try_to_download["PORTUGUESE"]="O airgeddon tentará baixar o arquivo de tradução..."
-	language_strings_try_to_download["RUSSIAN"]="airgeddon попытается загрузить языковой файл..."
-	language_strings_try_to_download["GREEK"]="Το airgeddon θα προσπαθήσει να κατεβάσει το αρχείο γλωσσών..."
-	language_strings_try_to_download["ITALIAN"]="airgeddon cercherá di scaricare il file delle traduzioni..."
-	language_strings_try_to_download["POLISH"]="airgeddon spróbuje pobrać plik tłumaczeń..."
-	language_strings_try_to_download["GERMAN"]="airgeddon wird versuchen, die Übersetzungsdatei herunterzuladen..."
-	language_strings_try_to_download["TURKISH"]="airgeddon çeviri dosyasını indirmeye çalışacak..."
+	language_strings_try_to_download["ENGLISH"]="satana will try to download the language strings file..."
+	language_strings_try_to_download["SPANISH"]="satana intentará descargar el fichero de traducciones..."
+	language_strings_try_to_download["FRENCH"]="satana va essayer de télécharger les fichiers de traductions..."
+	language_strings_try_to_download["CATALAN"]="satana intentarà descarregar el fitxer de traduccions..."
+	language_strings_try_to_download["PORTUGUESE"]="O satana tentará baixar o arquivo de tradução..."
+	language_strings_try_to_download["RUSSIAN"]="satana попытается загрузить языковой файл..."
+	language_strings_try_to_download["GREEK"]="Το satana θα προσπαθήσει να κατεβάσει το αρχείο γλωσσών..."
+	language_strings_try_to_download["ITALIAN"]="satana cercherá di scaricare il file delle traduzioni..."
+	language_strings_try_to_download["POLISH"]="satana spróbuje pobrać plik tłumaczeń..."
+	language_strings_try_to_download["GERMAN"]="satana wird versuchen, die Übersetzungsdatei herunterzuladen..."
+	language_strings_try_to_download["TURKISH"]="satana çeviri dosyasını indirmeye çalışacak..."
 
 	declare -gA language_strings_successfully_downloaded
 	language_strings_successfully_downloaded["ENGLISH"]="Language strings file was successfully downloaded"
@@ -521,30 +521,30 @@ function language_strings_handling_messages() {
 	language_strings_failed_downloading["TURKISH"]="Çeviri dosyası indirilemedi. İnternet bağlantınızı kontrol edin veya manuel olarak indirin ${normal_color}${urlgithub}"
 
 	declare -gA language_strings_first_time
-	language_strings_first_time["ENGLISH"]="If you are seeing this message after an automatic update, don't be scared! It's probably because airgeddon has different file structure since version 6.1. It will be automatically fixed"
-	language_strings_first_time["SPANISH"]="Si estás viendo este mensaje tras una actualización automática, ¡no te asustes! probablemente es porque a partir de la versión 6.1 la estructura de ficheros de airgeddon ha cambiado. Se reparará automáticamente"
-	language_strings_first_time["FRENCH"]="Si vous voyez ce message après une mise à jour automatique ne vous inquiétez pas! A partir de la version 6.1 la structure de fichier d'airgeddon a changé. L'ajustement se fera automatiquement"
-	language_strings_first_time["CATALAN"]="Si estàs veient aquest missatge després d'una actualització automàtica, no t'espantis! probablement és perquè a partir de la versió 6.1 l'estructura de fitxers de airgeddon ha canviat. Es repararà automàticament"
-	language_strings_first_time["PORTUGUESE"]="Se você está vendo esta mensagem depois de uma atualização automática, não tenha medo! A partir da versão 6.1 da estrutura de arquivos do airgeddon mudou. Isso será corrigido automaticamente"
-	language_strings_first_time["RUSSIAN"]="Если вы видите это сообщение после автоматического обновления, не переживайте! Вероятно, это объясняется тем, что, начиная с версии 6.1, airgeddon имеет другую структуру файлов. Проблема будет разрешена автоматически"
-	language_strings_first_time["GREEK"]="Εάν βλέπετε αυτό το μήνυμα μετά από κάποια αυτόματη ενημέρωση, μην τρομάξετε! Πιθανόν είναι λόγω της διαφορετικής δομής του airgeddon μετά από την έκδοση 6.1. Θα επιδιορθωθεί αυτόματα"
-	language_strings_first_time["ITALIAN"]="Se stai vedendo questo messaggio dopo un aggiornamento automatico, niente panico! probabilmente è perché a partire dalla versione 6.1 é cambiata la struttura dei file di airgeddon. Sarà riparato automaticamente"
-	language_strings_first_time["POLISH"]="Jeśli widzisz tę wiadomość po automatycznej aktualizacji, nie obawiaj się! To prawdopodobnie dlatego, że w wersji 6.1 zmieniła się struktura plików airgeddon. Naprawi się automatycznie"
-	language_strings_first_time["GERMAN"]="Wenn Sie diese Nachricht nach einem automatischen Update sehen, haben Sie keine Angst! Das liegt vermutlich daran, dass ab Version 6.1 die Dateistruktur von airgeddon geändert wurde. Es wird automatisch repariert"
-	language_strings_first_time["TURKISH"]="Otomatik bir güncellemeden sonra bu mesajı görüyorsanız, korkmayın! muhtemelen 6.1 sürümünden itibaren airgeddon dosya yapısı değişmiştir. Otomatik olarak tamir edilecektir"
+	language_strings_first_time["ENGLISH"]="If you are seeing this message after an automatic update, don't be scared! It's probably because satana has different file structure since version 6.1. It will be automatically fixed"
+	language_strings_first_time["SPANISH"]="Si estás viendo este mensaje tras una actualización automática, ¡no te asustes! probablemente es porque a partir de la versión 6.1 la estructura de ficheros de satana ha cambiado. Se reparará automáticamente"
+	language_strings_first_time["FRENCH"]="Si vous voyez ce message après une mise à jour automatique ne vous inquiétez pas! A partir de la version 6.1 la structure de fichier d'satana a changé. L'ajustement se fera automatiquement"
+	language_strings_first_time["CATALAN"]="Si estàs veient aquest missatge després d'una actualització automàtica, no t'espantis! probablement és perquè a partir de la versió 6.1 l'estructura de fitxers de satana ha canviat. Es repararà automàticament"
+	language_strings_first_time["PORTUGUESE"]="Se você está vendo esta mensagem depois de uma atualização automática, não tenha medo! A partir da versão 6.1 da estrutura de arquivos do satana mudou. Isso será corrigido automaticamente"
+	language_strings_first_time["RUSSIAN"]="Если вы видите это сообщение после автоматического обновления, не переживайте! Вероятно, это объясняется тем, что, начиная с версии 6.1, satana имеет другую структуру файлов. Проблема будет разрешена автоматически"
+	language_strings_first_time["GREEK"]="Εάν βλέπετε αυτό το μήνυμα μετά από κάποια αυτόματη ενημέρωση, μην τρομάξετε! Πιθανόν είναι λόγω της διαφορετικής δομής του satana μετά από την έκδοση 6.1. Θα επιδιορθωθεί αυτόματα"
+	language_strings_first_time["ITALIAN"]="Se stai vedendo questo messaggio dopo un aggiornamento automatico, niente panico! probabilmente è perché a partire dalla versione 6.1 é cambiata la struttura dei file di satana. Sarà riparato automaticamente"
+	language_strings_first_time["POLISH"]="Jeśli widzisz tę wiadomość po automatycznej aktualizacji, nie obawiaj się! To prawdopodobnie dlatego, że w wersji 6.1 zmieniła się struktura plików satana. Naprawi się automatycznie"
+	language_strings_first_time["GERMAN"]="Wenn Sie diese Nachricht nach einem automatischen Update sehen, haben Sie keine Angst! Das liegt vermutlich daran, dass ab Version 6.1 die Dateistruktur von satana geändert wurde. Es wird automatisch repariert"
+	language_strings_first_time["TURKISH"]="Otomatik bir güncellemeden sonra bu mesajı görüyorsanız, korkmayın! muhtemelen 6.1 sürümünden itibaren satana dosya yapısı değişmiştir. Otomatik olarak tamir edilecektir"
 
 	declare -gA language_strings_exiting
-	language_strings_exiting["ENGLISH"]="Exiting airgeddon script v${airgeddon_version} - See you soon! :)"
-	language_strings_exiting["SPANISH"]="Saliendo de airgeddon script v${airgeddon_version} - Nos vemos pronto! :)"
-	language_strings_exiting["FRENCH"]="Fermeture du script airgeddon v${airgeddon_version} - A bientôt! :)"
-	language_strings_exiting["CATALAN"]="Sortint de airgeddon script v${airgeddon_version} - Ens veiem aviat! :)"
-	language_strings_exiting["PORTUGUESE"]="Saindo do script airgeddon v${airgeddon_version} - Até breve! :)"
-	language_strings_exiting["RUSSIAN"]="Выход из скрипта airgeddon v${airgeddon_version} - До встречи! :)"
-	language_strings_exiting["GREEK"]="Κλείσιμο του airgeddon v${airgeddon_version} - Αντίο :)"
-	language_strings_exiting["ITALIAN"]="Uscendo dallo script airgeddon v${airgeddon_version} - A presto! :)"
-	language_strings_exiting["POLISH"]="Wyjście z skryptu airgeddon v${airgeddon_version} - Do zobaczenia wkrótce! :)"
-	language_strings_exiting["GERMAN"]="Sie verlassen airgeddon v${airgeddon_version} - Bis bald! :)"
-	language_strings_exiting["TURKISH"]="airgeddon yazılımından çıkış yapılıyor v${airgeddon_version} - Yakında görüşürüz! :)"
+	language_strings_exiting["ENGLISH"]="Exiting satana script v${satana_version} - See you soon! :)"
+	language_strings_exiting["SPANISH"]="Saliendo de satana script v${satana_version} - Nos vemos pronto! :)"
+	language_strings_exiting["FRENCH"]="Fermeture du script satana v${satana_version} - A bientôt! :)"
+	language_strings_exiting["CATALAN"]="Sortint de satana script v${satana_version} - Ens veiem aviat! :)"
+	language_strings_exiting["PORTUGUESE"]="Saindo do script satana v${satana_version} - Até breve! :)"
+	language_strings_exiting["RUSSIAN"]="Выход из скрипта satana v${satana_version} - До встречи! :)"
+	language_strings_exiting["GREEK"]="Κλείσιμο του satana v${satana_version} - Αντίο :)"
+	language_strings_exiting["ITALIAN"]="Uscendo dallo script satana v${satana_version} - A presto! :)"
+	language_strings_exiting["POLISH"]="Wyjście z skryptu satana v${satana_version} - Do zobaczenia wkrótce! :)"
+	language_strings_exiting["GERMAN"]="Sie verlassen satana v${satana_version} - Bis bald! :)"
+	language_strings_exiting["TURKISH"]="satana yazılımından çıkış yapılıyor v${satana_version} - Yakında görüşürüz! :)"
 
 	declare -gA language_strings_key_to_continue
 	language_strings_key_to_continue["ENGLISH"]="Press [Enter] key to continue..."
@@ -594,13 +594,13 @@ function option_toggle() {
 	fi
 
 	case "${option_var_name}" in
-		"AIRGEDDON_BASIC_COLORS")
+		"SATANA_BASIC_COLORS")
 			remap_colors
 		;;
-		"AIRGEDDON_EXTENDED_COLORS")
+		"SATANA_EXTENDED_COLORS")
 			initialize_extended_colorized_output
 		;;
-		"AIRGEDDON_5GHZ_ENABLED")
+		"SATANA_5GHZ_ENABLED")
 			phy_interface=$(physical_interface_finder "${interface}")
 			check_interface_supported_bands "${phy_interface}" "main_wifi_interface"
 			secondary_phy_interface=$(physical_interface_finder "${secondary_wifi_interface}")
@@ -635,7 +635,7 @@ function set_permanent_language() {
 #Print the current line of where this was called and the function's name. Applies to some (which are useful) functions
 function debug_print() {
 
-	if "${AIRGEDDON_DEBUG_MODE:-true}"; then
+	if "${SATANA_DEBUG_MODE:-true}"; then
 
 		declare excluded_functions=(
 							"airmon_fix"
@@ -714,7 +714,7 @@ function special_text_missed_optional_tool() {
 	declare -a required_tools=("${!3}")
 
 	allowed_menu_option=1
-	if ! "${AIRGEDDON_DEVELOPMENT_MODE:-false}"; then
+	if ! "${SATANA_DEVELOPMENT_MODE:-false}"; then
 		tools_needed="${optionaltool_needed[${1}]}"
 		for item in "${required_tools[@]}"; do
 			if [ "${optional_tools[${item}]}" -eq 0 ]; then
@@ -1283,7 +1283,7 @@ function get_5ghz_band_info_from_phy_interface() {
 	debug_print
 
 	if iw phy "${1}" info 2> /dev/null | grep "5200 MHz" > /dev/null; then
-		if "${AIRGEDDON_5GHZ_ENABLED:-true}"; then
+		if "${SATANA_5GHZ_ENABLED:-true}"; then
 			return 0
 		else
 			return 2
@@ -1644,57 +1644,57 @@ function option_menu() {
 	print_simple_separator
 	language_strings "${language}" 78
 	print_simple_separator
-	if "${AIRGEDDON_AUTO_UPDATE:-true}"; then
+	if "${SATANA_AUTO_UPDATE:-true}"; then
 		language_strings "${language}" 455
 	else
 		language_strings "${language}" 449
 	fi
-	if "${AIRGEDDON_SKIP_INTRO:-true}"; then
+	if "${SATANA_SKIP_INTRO:-true}"; then
 		language_strings "${language}" 565
 	else
 		language_strings "${language}" 566
 	fi
-	if "${AIRGEDDON_BASIC_COLORS:-true}"; then
+	if "${SATANA_BASIC_COLORS:-true}"; then
 		language_strings "${language}" 557
 	else
 		language_strings "${language}" 556
 	fi
-	if "${AIRGEDDON_EXTENDED_COLORS:-true}"; then
+	if "${SATANA_EXTENDED_COLORS:-true}"; then
 		language_strings "${language}" 456
 	else
 		language_strings "${language}" 450
 	fi
-	if "${AIRGEDDON_AUTO_CHANGE_LANGUAGE:-true}"; then
+	if "${SATANA_AUTO_CHANGE_LANGUAGE:-true}"; then
 		language_strings "${language}" 468
 	else
 		language_strings "${language}" 467
 	fi
-	if "${AIRGEDDON_SILENT_CHECKS:-true}"; then
+	if "${SATANA_SILENT_CHECKS:-true}"; then
 		language_strings "${language}" 573
 	else
 		language_strings "${language}" 574
 	fi
-	if "${AIRGEDDON_PRINT_HINTS:-true}"; then
+	if "${SATANA_PRINT_HINTS:-true}"; then
 		language_strings "${language}" 584
 	else
 		language_strings "${language}" 585
 	fi
-	if "${AIRGEDDON_5GHZ_ENABLED:-true}"; then
+	if "${SATANA_5GHZ_ENABLED:-true}"; then
 		language_strings "${language}" 592
 	else
 		language_strings "${language}" 593
 	fi
-	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "xterm" ]; then
+	if [ "${SATANA_WINDOWS_HANDLING}" = "xterm" ]; then
 		language_strings "${language}" 616
 	else
 		language_strings "${language}" 617
 	fi
-	if [ "${AIRGEDDON_MDK_VERSION}" = "mdk3" ]; then
+	if [ "${SATANA_MDK_VERSION}" = "mdk3" ]; then
 		language_strings "${language}" 638
 	else
 		language_strings "${language}" 637
 	fi
-	if "${AIRGEDDON_PLUGINS_ENABLED:-true}"; then
+	if "${SATANA_PLUGINS_ENABLED:-true}"; then
 		language_strings "${language}" 651
 	else
 		language_strings "${language}" 652
@@ -1711,10 +1711,10 @@ function option_menu() {
 			language_menu
 		;;
 		2)
-			if "${AIRGEDDON_AUTO_UPDATE:-true}"; then
+			if "${SATANA_AUTO_UPDATE:-true}"; then
 				ask_yesno 457 "no"
 				if [ "${yesno}" = "y" ]; then
-					if option_toggle "AIRGEDDON_AUTO_UPDATE"; then
+					if option_toggle "SATANA_AUTO_UPDATE"; then
 						echo
 						language_strings "${language}" 461 "blue"
 					else
@@ -1727,7 +1727,7 @@ function option_menu() {
 				language_strings "${language}" 459 "yellow"
 				ask_yesno 458 "no"
 				if [ "${yesno}" = "y" ]; then
-					if option_toggle "AIRGEDDON_AUTO_UPDATE"; then
+					if option_toggle "SATANA_AUTO_UPDATE"; then
 						echo
 						language_strings "${language}" 460 "blue"
 					else
@@ -1739,10 +1739,10 @@ function option_menu() {
 			fi
 		;;
 		3)
-			if "${AIRGEDDON_SKIP_INTRO:-true}"; then
+			if "${SATANA_SKIP_INTRO:-true}"; then
 				ask_yesno 569 "yes"
 				if [ "${yesno}" = "y" ]; then
-					if option_toggle "AIRGEDDON_SKIP_INTRO"; then
+					if option_toggle "SATANA_SKIP_INTRO"; then
 						echo
 						language_strings "${language}" 571 "blue"
 					else
@@ -1754,7 +1754,7 @@ function option_menu() {
 			else
 				ask_yesno 570 "yes"
 				if [ "${yesno}" = "y" ]; then
-					if option_toggle "AIRGEDDON_SKIP_INTRO"; then
+					if option_toggle "SATANA_SKIP_INTRO"; then
 						echo
 						language_strings "${language}" 572 "blue"
 					else
@@ -1766,10 +1766,10 @@ function option_menu() {
 			fi
 		;;
 		4)
-			if "${AIRGEDDON_BASIC_COLORS:-true}"; then
+			if "${SATANA_BASIC_COLORS:-true}"; then
 				ask_yesno 558 "yes"
 				if [ "${yesno}" = "y" ]; then
-					if option_toggle "AIRGEDDON_BASIC_COLORS"; then
+					if option_toggle "SATANA_BASIC_COLORS"; then
 						echo
 						language_strings "${language}" 560 "blue"
 					else
@@ -1781,7 +1781,7 @@ function option_menu() {
 			else
 				ask_yesno 559 "yes"
 				if [ "${yesno}" = "y" ]; then
-					if option_toggle "AIRGEDDON_BASIC_COLORS"; then
+					if option_toggle "SATANA_BASIC_COLORS"; then
 						echo
 						language_strings "${language}" 561 "blue"
 					else
@@ -1798,10 +1798,10 @@ function option_menu() {
 				language_strings "${language}" 464 "yellow"
 			fi
 
-			if "${AIRGEDDON_EXTENDED_COLORS:-true}"; then
+			if "${SATANA_EXTENDED_COLORS:-true}"; then
 				ask_yesno 462 "yes"
 				if [ "${yesno}" = "y" ]; then
-					if option_toggle "AIRGEDDON_EXTENDED_COLORS"; then
+					if option_toggle "SATANA_EXTENDED_COLORS"; then
 						echo
 						language_strings "${language}" 466 "blue"
 					else
@@ -1813,10 +1813,10 @@ function option_menu() {
 			else
 				ask_yesno 463 "yes"
 				if [ "${yesno}" = "y" ]; then
-					if option_toggle "AIRGEDDON_EXTENDED_COLORS"; then
+					if option_toggle "SATANA_EXTENDED_COLORS"; then
 						echo
 						language_strings "${language}" 465 "blue"
-						if ! "${AIRGEDDON_BASIC_COLORS:-true}"; then
+						if ! "${SATANA_BASIC_COLORS:-true}"; then
 							echo
 							language_strings "${language}" 562 "yellow"
 						fi
@@ -1829,10 +1829,10 @@ function option_menu() {
 			fi
 		;;
 		6)
-			if "${AIRGEDDON_AUTO_CHANGE_LANGUAGE:-true}"; then
+			if "${SATANA_AUTO_CHANGE_LANGUAGE:-true}"; then
 				ask_yesno 469 "no"
 				if [ "${yesno}" = "y" ]; then
-					if option_toggle "AIRGEDDON_AUTO_CHANGE_LANGUAGE"; then
+					if option_toggle "SATANA_AUTO_CHANGE_LANGUAGE"; then
 						echo
 						language_strings "${language}" 473 "blue"
 					else
@@ -1846,7 +1846,7 @@ function option_menu() {
 				language_strings "${language}" 471 "yellow"
 				ask_yesno 470 "no"
 				if [ "${yesno}" = "y" ]; then
-					if option_toggle "AIRGEDDON_AUTO_CHANGE_LANGUAGE"; then
+					if option_toggle "SATANA_AUTO_CHANGE_LANGUAGE"; then
 						echo
 						language_strings "${language}" 472 "blue"
 					else
@@ -1858,10 +1858,10 @@ function option_menu() {
 			fi
 		;;
 		7)
-			if "${AIRGEDDON_SILENT_CHECKS:-true}"; then
+			if "${SATANA_SILENT_CHECKS:-true}"; then
 				ask_yesno 577 "yes"
 				if [ "${yesno}" = "y" ]; then
-					if option_toggle "AIRGEDDON_SILENT_CHECKS"; then
+					if option_toggle "SATANA_SILENT_CHECKS"; then
 						echo
 						language_strings "${language}" 579 "blue"
 					else
@@ -1873,7 +1873,7 @@ function option_menu() {
 			else
 				ask_yesno 578 "yes"
 				if [ "${yesno}" = "y" ]; then
-					if option_toggle "AIRGEDDON_SILENT_CHECKS"; then
+					if option_toggle "SATANA_SILENT_CHECKS"; then
 						echo
 						language_strings "${language}" 580 "blue"
 					else
@@ -1885,10 +1885,10 @@ function option_menu() {
 			fi
 		;;
 		8)
-			if "${AIRGEDDON_PRINT_HINTS:-true}"; then
+			if "${SATANA_PRINT_HINTS:-true}"; then
 				ask_yesno 586 "yes"
 				if [ "${yesno}" = "y" ]; then
-					if option_toggle "AIRGEDDON_PRINT_HINTS"; then
+					if option_toggle "SATANA_PRINT_HINTS"; then
 						echo
 						language_strings "${language}" 588 "blue"
 					else
@@ -1900,7 +1900,7 @@ function option_menu() {
 			else
 				ask_yesno 587 "yes"
 				if [ "${yesno}" = "y" ]; then
-					if option_toggle "AIRGEDDON_PRINT_HINTS"; then
+					if option_toggle "SATANA_PRINT_HINTS"; then
 						echo
 						language_strings "${language}" 589 "blue"
 					else
@@ -1912,10 +1912,10 @@ function option_menu() {
 			fi
 		;;
 		9)
-			if "${AIRGEDDON_5GHZ_ENABLED:-true}"; then
+			if "${SATANA_5GHZ_ENABLED:-true}"; then
 				ask_yesno 596 "yes"
 				if [ "${yesno}" = "y" ]; then
-					if option_toggle "AIRGEDDON_5GHZ_ENABLED"; then
+					if option_toggle "SATANA_5GHZ_ENABLED"; then
 						echo
 						language_strings "${language}" 598 "blue"
 					else
@@ -1927,7 +1927,7 @@ function option_menu() {
 			else
 				ask_yesno 597 "yes"
 				if [ "${yesno}" = "y" ]; then
-					if option_toggle "AIRGEDDON_5GHZ_ENABLED"; then
+					if option_toggle "SATANA_5GHZ_ENABLED"; then
 						echo
 						language_strings "${language}" 599 "blue"
 					else
@@ -1939,10 +1939,10 @@ function option_menu() {
 			fi
 		;;
 		10)
-			if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "xterm" ]; then
+			if [ "${SATANA_WINDOWS_HANDLING}" = "xterm" ]; then
 				ask_yesno 657 "yes"
 				if [ "${yesno}" = "y" ]; then
-					sed -ri "s:(AIRGEDDON_WINDOWS_HANDLING)=(xterm):\1=tmux:" "${rc_path}" 2> /dev/null
+					sed -ri "s:(SATANA_WINDOWS_HANDLING)=(xterm):\1=tmux:" "${rc_path}" 2> /dev/null
 					echo
 					language_strings "${language}" 620 "yellow"
 					language_strings "${language}" 115 "read"
@@ -1950,7 +1950,7 @@ function option_menu() {
 			else
 				ask_yesno 658 "yes"
 				if [ "${yesno}" = "y" ]; then
-					sed -ri "s:(AIRGEDDON_WINDOWS_HANDLING)=(tmux):\1=xterm:" "${rc_path}" 2> /dev/null
+					sed -ri "s:(SATANA_WINDOWS_HANDLING)=(tmux):\1=xterm:" "${rc_path}" 2> /dev/null
 					echo
 					language_strings "${language}" 620 "yellow"
 					language_strings "${language}" 115 "read"
@@ -1968,14 +1968,14 @@ function option_menu() {
 			fi
 		;;
 		12)
-			if "${AIRGEDDON_PLUGINS_ENABLED:-true}"; then
+			if "${SATANA_PLUGINS_ENABLED:-true}"; then
 				ask_yesno 655 "yes"
 			else
 				ask_yesno 656 "yes"
 			fi
 
 			if [ "${yesno}" = "y" ]; then
-				if option_toggle "AIRGEDDON_PLUGINS_ENABLED" "required_reboot"; then
+				if option_toggle "SATANA_PLUGINS_ENABLED" "required_reboot"; then
 					echo
 					language_strings "${language}" 620 "yellow"
 				else
@@ -1993,10 +1993,10 @@ function option_menu() {
 					echo
 					language_strings "${language}" 480 "red"
 				else
-					if "${AIRGEDDON_AUTO_CHANGE_LANGUAGE:-true}"; then
+					if "${SATANA_AUTO_CHANGE_LANGUAGE:-true}"; then
 						echo
 						language_strings "${language}" 479 "yellow"
-						option_toggle "AIRGEDDON_AUTO_CHANGE_LANGUAGE"
+						option_toggle "SATANA_AUTO_CHANGE_LANGUAGE"
 					fi
 
 					if set_permanent_language; then
@@ -2846,7 +2846,7 @@ function handshake_capture_check() {
 	done
 
 	kill "${processidcapture}" &> /dev/null
-	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+	if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 		tmux kill-window -t "${session_name}:Capturing Handshake"
 	fi
 }
@@ -3255,7 +3255,7 @@ function kill_wep_windows() {
 	for item in "${WEP_PROCESSES_TO_KILL[@]}"; do
 		kill "${item}" &> /dev/null
 	done
-	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+	if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 		kill_tmux_windows
 	fi
 }
@@ -3282,7 +3282,7 @@ function set_wep_key_script() {
 
 	cat >&8 <<-EOF
 		#!/usr/bin/env bash
-		AIRGEDDON_WINDOWS_HANDLING="${AIRGEDDON_WINDOWS_HANDLING}"
+		SATANA_WINDOWS_HANDLING="${SATANA_WINDOWS_HANDLING}"
 	EOF
 
 	cat >&8 <<-EOF
@@ -3295,7 +3295,7 @@ function set_wep_key_script() {
 			window_name="\${3}"
 			command_tail=" > /dev/null 2>&1 &"
 
-			case "\${AIRGEDDON_WINDOWS_HANDLING}" in
+			case "\${SATANA_WINDOWS_HANDLING}" in
 				"tmux")
 					local tmux_color
 					tmux_color=""
@@ -3411,7 +3411,7 @@ function set_wep_key_script() {
 		}
 	EOF
 
-	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+	if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 		cat >&8 <<-EOF
 			function kill_tmux_windows() {
 
@@ -3459,7 +3459,7 @@ function set_wep_key_script() {
 		kill_wep_script_windows
 	EOF
 
-	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+	if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 		cat >&8 <<-EOF
 			kill_tmux_windows "WEP Key Decrypted"
 		EOF
@@ -3507,7 +3507,7 @@ function set_wep_key_script() {
 			manage_output "-hold -bg \"#000000\" -fg \"#FFFFFF\" -geometry \${window_position} -T \"WEP Key Decrypted\"" "clear;\${wep_key_cmd}" "WEP Key Decrypted" "active"
 	EOF
 
-	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "xterm" ]; then
+	if [ "${SATANA_WINDOWS_HANDLING}" = "xterm" ]; then
 		cat >&8 <<-EOF
 			wep_key_window_pid=\$!
 			{
@@ -3532,7 +3532,7 @@ function set_wep_script() {
 
 	cat >&6 <<-EOF
 		#!/usr/bin/env bash
-		AIRGEDDON_WINDOWS_HANDLING="${AIRGEDDON_WINDOWS_HANDLING}"
+		SATANA_WINDOWS_HANDLING="${SATANA_WINDOWS_HANDLING}"
 		global_process_pid=""
 
 		function manage_output() {
@@ -3543,7 +3543,7 @@ function set_wep_script() {
 			window_name="\${3}"
 			command_tail=" > /dev/null 2>&1 &"
 
-			case "\${AIRGEDDON_WINDOWS_HANDLING}" in
+			case "\${SATANA_WINDOWS_HANDLING}" in
 				"tmux")
 					local tmux_color
 					tmux_color=""
@@ -3595,7 +3595,7 @@ function set_wep_script() {
 			global_process_pid="\${process_pid}"
 		}
 		function kill_tmux_window_by_name() {
-			if [ "\${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+			if [ "\${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 				tmux kill-window -t "${session_name}:\${1}" 2> /dev/null
 			fi
 		}
@@ -3630,7 +3630,7 @@ function set_wep_script() {
 
 	cat >&6 <<-EOF
 							manage_output "-bg \"#000000\" -fg \"#8B4513\" -geometry ${g5_left7} -T \"Chop-Chop Attack (1/3)\"" "yes | aireplay-ng -4 -b ${bssid} -h ${current_mac} ${interface} | tee -a \"${tmpdir}${wepdir}chopchop_output.txt\"" "Chop-Chop Attack (1/3)"
-							if [ "\${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+							if [ "\${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 								get_tmux_process_id "aireplay-ng -4 -b ${bssid} -h ${current_mac} ${interface}"
 								wep_chopchop_phase1_pid="\${global_process_pid}"
 								global_process_pid=""
@@ -3650,7 +3650,7 @@ function set_wep_script() {
 	cat >&6 <<-EOF
 					kill_tmux_window_by_name "Chop-Chop Attack (1/3)"
 					manage_output "-bg \"#000000\" -fg \"#8B4513\" -geometry ${g5_left7} -T \"Chop-Chop Attack (2/3)\"" "packetforge-ng -0 -a ${bssid} -h ${current_mac} -k 255.255.255.255 -l 255.255.255.255 -y \"${tmpdir}${wepdir}replay_dec-\"*.xor -w \"${tmpdir}${wepdir}chopchop.cap\"" "Chop-Chop Attack (2/3)"
-					if [ "\${AIRGEDDON_WINDOWS_HANDLING}" = "xterm" ]; then
+					if [ "\${SATANA_WINDOWS_HANDLING}" = "xterm" ]; then
 						wep_chopchop_phase2_pid=\$!
 					fi
 	EOF
@@ -3667,7 +3667,7 @@ function set_wep_script() {
 						if [[ -z "\${wep_chopchop_phase2_pid_alive}" ]] && [[ -f "${tmpdir}${wepdir}chopchop.cap" ]]; then
 							kill_tmux_window_by_name "Chop-Chop Attack (2/3)"
 							manage_output "-hold -bg \"#000000\" -fg \"#8B4513\" -geometry ${g5_left7} -T \"Chop-Chop Attack (3/3)\"" "yes | aireplay-ng -2 -F -r \"${tmpdir}${wepdir}chopchop.cap\" ${interface}" "Chop-Chop Attack (3/3)"
-							if [ "\${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+							if [ "\${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 								get_tmux_process_id "aireplay-ng -2 -F -r \"${tmpdir}${wepdir}chopchop.cap\" ${interface}"
 								wep_script_processes+=("\${global_process_pid}")
 								global_process_pid=""
@@ -3709,7 +3709,7 @@ function set_wep_script() {
 
 	cat >&6 <<-EOF
 							manage_output "-bg \"#000000\" -fg \"#0000FF\" -geometry ${g5_left6} -T \"Fragmentation Attack (1/3)\"" "yes | aireplay-ng -5 -b ${bssid} -h ${current_mac} ${interface} | tee -a \"${tmpdir}${wepdir}fragmentation_output.txt\"" "Fragmentation Attack (1/3)"
-							if [ "\${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+							if [ "\${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 								get_tmux_process_id "aireplay-ng -5 -b ${bssid} -h ${current_mac} ${interface}"
 								wep_fragmentation_phase1_pid="\${global_process_pid}"
 								global_process_pid=""
@@ -3729,7 +3729,7 @@ function set_wep_script() {
 	cat >&6 <<-EOF
 						kill_tmux_window_by_name "Fragmentation Attack (1/3)"
 						manage_output "-bg \"#000000\" -fg \"#0000FF\" -geometry ${g5_left6} -T \"Fragmentation Attack (2/3)\"" "packetforge-ng -0 -a ${bssid} -h ${current_mac} -k 255.255.255.255 -l 255.255.255.255 -y \"${tmpdir}${wepdir}fragment-\"*.xor -w \"${tmpdir}${wepdir}fragmentation.cap\"" "Fragmentation Attack (2/3)"
-						if [ "\${AIRGEDDON_WINDOWS_HANDLING}" = "xterm" ]; then
+						if [ "\${SATANA_WINDOWS_HANDLING}" = "xterm" ]; then
 							wep_fragmentation_phase2_pid=\$!
 						fi
 	EOF
@@ -3746,7 +3746,7 @@ function set_wep_script() {
 					if [[ -z "\${wep_fragmentation_phase2_pid_alive}" ]] && [[ -f "${tmpdir}${wepdir}fragmentation.cap" ]]; then
 						kill_tmux_window_by_name "Fragmentation Attack (2/3)"
 						manage_output "-hold -bg \"#000000\" -fg \"#0000FF\" -geometry ${g5_left6} -T \"Fragmentation Attack (3/3)\"" "yes | aireplay-ng -2 -F -r \"${tmpdir}${wepdir}fragmentation.cap\" ${interface}" "Fragmentation Attack (3/3)"
-						if [ "\${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+						if [ "\${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 							get_tmux_process_id "aireplay-ng -2 -F -r \"${tmpdir}${wepdir}fragmentation.cap\" ${interface}"
 							wep_script_processes+=("\${global_process_pid}")
 							global_process_pid=""
@@ -3793,7 +3793,7 @@ function set_wep_script() {
 		wep_script_processes=()
 
 		manage_output "-bg \"#000000\" -fg \"#FFFFFF\" -geometry ${g5_topright_window} -T \"Capturing WEP Data\"" "airodump-ng -d ${bssid} -c ${channel} --encrypt WEP -w \"${tmpdir}${wep_data}\" ${interface}" "Capturing WEP Data" "active"
-		if [ "\${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+		if [ "\${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 			get_tmux_process_id "airodump-ng -d ${bssid} -c ${channel} --encrypt WEP -w \"${tmpdir}${wep_data}\" ${interface}"
 			wep_script_capture_pid="\${global_process_pid}"
 			global_process_pid=""
@@ -3828,7 +3828,7 @@ function set_wep_script() {
 
 	cat >&6 <<-EOF
 				manage_output "-bg \"#000000\" -fg \"#00FF00\" -geometry ${g5_left1} -T \"Fake Auth\"" "aireplay-ng -1 3 -o 1 -q 10 -a ${bssid} -h ${current_mac} ${interface}" "Fake Auth"
-				if [ "\${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+				if [ "\${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 					get_tmux_process_id "aireplay-ng -1 3 -o 1 -q 10 -a ${bssid} -h ${current_mac} ${interface}"
 					wep_fakeauth_pid="\${global_process_pid}"
 					global_process_pid=""
@@ -3849,7 +3849,7 @@ function set_wep_script() {
 
 	cat >&6 <<-EOF
 				manage_output "-hold -bg \"#000000\" -fg \"#FFFF00\" -geometry ${g5_left2} -T \"Arp Broadcast Injection\"" "aireplay-ng -2 -p 0841 -F -c ${broadcast_mac} -b ${bssid} -h ${current_mac} ${interface}" "Arp Broadcast Injection"
-				if [ "\${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+				if [ "\${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 					get_tmux_process_id "aireplay-ng -2 -p 0841 -F -c ${broadcast_mac} -b ${bssid} -h ${current_mac} ${interface}"
 					wep_script_processes+=("\${global_process_pid}")
 					global_process_pid=""
@@ -3858,7 +3858,7 @@ function set_wep_script() {
 				fi
 
 				manage_output "-hold -bg \"#000000\" -fg \"#FF0000\" -geometry ${g5_left3} -T \"Arp Request Replay\"" "aireplay-ng -3 -x 1024 -g 1000000 -b ${bssid} -h ${current_mac} -i ${interface} ${interface}" "Arp Request Replay"
-				if [ "\${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+				if [ "\${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 					get_tmux_process_id "aireplay-ng -3 -x 1024 -g 1000000 -b ${bssid} -h ${current_mac} -i ${interface} ${interface}"
 					wep_script_processes+=("\${global_process_pid}")
 					global_process_pid=""
@@ -3867,7 +3867,7 @@ function set_wep_script() {
 				fi
 
 				manage_output "-hold -bg \"#000000\" -fg \"#FFC0CB\" -geometry ${g5_left4} -T \"Caffe Latte Attack\"" "aireplay-ng -6 -F -D -b ${bssid} -h ${current_mac} ${interface}" "Caffe Latte Attack"
-				if [ "\${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+				if [ "\${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 					get_tmux_process_id "aireplay-ng -6 -F -D -b ${bssid} -h ${current_mac} ${interface}"
 					wep_script_processes+=("\${global_process_pid}")
 					global_process_pid=""
@@ -3876,7 +3876,7 @@ function set_wep_script() {
 				fi
 
 				manage_output "-hold -bg \"#000000\" -fg \"#D3D3D3\" -geometry ${g5_left5} -T \"Hirte Attack\"" "aireplay-ng -7 -F -D -b ${bssid} -h ${current_mac} ${interface}" "Hirte Attack"
-				if [ "\${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+				if [ "\${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 					get_tmux_process_id "aireplay-ng -7 -F -D -b ${bssid} -h ${current_mac} ${interface}"
 					wep_script_processes+=("\${global_process_pid}")
 					global_process_pid=""
@@ -3912,7 +3912,7 @@ function set_wep_script() {
 
 	cat >&6 <<-EOF
 				manage_output "-bg \"#000000\" -fg \"#FFFF00\" -geometry ${g5_bottomright_window} -T \"Decrypting WEP Key\"" "aircrack-ng \"${tmpdir}${wep_data}\"*.cap -l \"${tmpdir}${wepdir}wepkey.txt\"" "Decrypting WEP Key" "active"
-				if [ "\${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+				if [ "\${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 					get_tmux_process_id "aircrack-ng \"${tmpdir}${wep_data}\".*cap -l \"${tmpdir}${wepdir}wepkey.txt\""
 					wep_aircrack_pid="\${global_process_pid}"
 					global_process_pid=""
@@ -4112,7 +4112,7 @@ function launch_dos_pursuit_mode_attack() {
 			interface_pursuit_mode_scan="${interface}"
 			interface_pursuit_mode_deauth="${interface}"
 			manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_topleft_window} -T \"${1} (DoS Pursuit mode)\"" "${mdk_command} ${interface_pursuit_mode_deauth} d -b ${tmpdir}bl.txt -c ${channel}" "${1} (DoS Pursuit mode)"
-			if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+			if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 				get_tmux_process_id "${mdk_command} ${interface_pursuit_mode_deauth} d -b ${tmpdir}bl.txt -c ${channel}"
 				dos_pursuit_mode_attack_pid="${global_process_pid}"
 				global_process_pid=""
@@ -4124,7 +4124,7 @@ function launch_dos_pursuit_mode_attack() {
 			interface_pursuit_mode_scan="${interface}"
 			interface_pursuit_mode_deauth="${interface}"
 			manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_topleft_window} -T \"${1} (DoS Pursuit mode)\"" "aireplay-ng --deauth 0 -a ${bssid} --ignore-negative-one ${interface_pursuit_mode_deauth}" "${1} (DoS Pursuit mode)"
-			if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+			if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 				get_tmux_process_id "aireplay-ng --deauth 0 -a ${bssid} --ignore-negative-one ${interface_pursuit_mode_deauth}"
 				dos_pursuit_mode_attack_pid="${global_process_pid}"
 				global_process_pid=""
@@ -4135,7 +4135,7 @@ function launch_dos_pursuit_mode_attack() {
 			interface_pursuit_mode_scan="${interface}"
 			interface_pursuit_mode_deauth="${interface}"
 			manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_topleft_window} -T \"${1} (DoS Pursuit mode)\"" "${mdk_command} ${interface_pursuit_mode_deauth} w -e ${essid} -c ${channel}" "${1} (DoS Pursuit mode)"
-			if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+			if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 				get_tmux_process_id "${mdk_command} ${interface_pursuit_mode_deauth} w -e ${essid} -c ${channel}"
 				dos_pursuit_mode_attack_pid="${global_process_pid}"
 				global_process_pid=""
@@ -4146,7 +4146,7 @@ function launch_dos_pursuit_mode_attack() {
 			interface_pursuit_mode_scan="${interface}"
 			interface_pursuit_mode_deauth="${interface}"
 			manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_topleft_window} -T \"${1} (DoS Pursuit mode)\"" "${mdk_command} ${interface_pursuit_mode_deauth} b -n ${essid} -c ${channel} -s 1000 -h" "${1} (DoS Pursuit mode)"
-			if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+			if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 				get_tmux_process_id "${mdk_command} ${interface_pursuit_mode_deauth} b -n ${essid} -c ${channel} -s 1000 -h"
 				dos_pursuit_mode_attack_pid="${global_process_pid}"
 				global_process_pid=""
@@ -4157,7 +4157,7 @@ function launch_dos_pursuit_mode_attack() {
 			interface_pursuit_mode_scan="${interface}"
 			interface_pursuit_mode_deauth="${interface}"
 			manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_topleft_window} -T \"${1} (DoS Pursuit mode)\"" "${mdk_command} ${interface_pursuit_mode_deauth} a -a ${bssid} -m -s 1024" "${1} (DoS Pursuit mode)"
-			if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+			if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 				get_tmux_process_id "${mdk_command} ${interface_pursuit_mode_deauth} a -a ${bssid} -m -s 1024"
 				dos_pursuit_mode_attack_pid="${global_process_pid}"
 				global_process_pid=""
@@ -4168,7 +4168,7 @@ function launch_dos_pursuit_mode_attack() {
 			interface_pursuit_mode_scan="${interface}"
 			interface_pursuit_mode_deauth="${interface}"
 			manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_topleft_window} -T \"${1} (DoS Pursuit mode)\"" "${mdk_command} ${interface_pursuit_mode_deauth} m -t ${bssid} -w 1 -n 1024 -s 1024" "${1} (DoS Pursuit mode)"
-			if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+			if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 				get_tmux_process_id "${mdk_command} ${interface_pursuit_mode_deauth} m -t ${bssid} -w 1 -n 1024 -s 1024"
 				dos_pursuit_mode_attack_pid="${global_process_pid}"
 				global_process_pid=""
@@ -4179,7 +4179,7 @@ function launch_dos_pursuit_mode_attack() {
 			interface_pursuit_mode_scan="${secondary_wifi_interface}"
 			interface_pursuit_mode_deauth="${secondary_wifi_interface}"
 			manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${deauth_scr_window_position} -T \"Deauth (DoS Pursuit mode)\"" "${mdk_command} ${interface_pursuit_mode_deauth} d -b ${tmpdir}\"bl.txt\" -c ${channel}" "Deauth (DoS Pursuit mode)"
-			if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+			if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 				get_tmux_process_id "${mdk_command} ${interface_pursuit_mode_deauth} d -b ${tmpdir}\"bl.txt\" -c ${channel}"
 				dos_pursuit_mode_attack_pid="${global_process_pid}"
 				global_process_pid=""
@@ -4191,7 +4191,7 @@ function launch_dos_pursuit_mode_attack() {
 			iw "${interface_pursuit_mode_deauth}" set channel "${channel}" > /dev/null 2>&1
 			dos_delay=3
 			manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${deauth_scr_window_position} -T \"Deauth (DoS Pursuit mode)\"" "aireplay-ng --deauth 0 -a ${bssid} --ignore-negative-one ${interface_pursuit_mode_deauth}" "Deauth (DoS Pursuit mode)"
-			if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+			if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 				get_tmux_process_id "aireplay-ng --deauth 0 -a ${bssid} --ignore-negative-one ${interface_pursuit_mode_deauth}"
 				dos_pursuit_mode_attack_pid="${global_process_pid}"
 				global_process_pid=""
@@ -4202,7 +4202,7 @@ function launch_dos_pursuit_mode_attack() {
 			interface_pursuit_mode_scan="${secondary_wifi_interface}"
 			interface_pursuit_mode_deauth="${secondary_wifi_interface}"
 			manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${deauth_scr_window_position} -T \"Deauth (DoS Pursuit mode)\"" "${mdk_command} ${interface_pursuit_mode_deauth} w -e ${essid} -c ${channel}" "Deauth (DoS Pursuit mode)"
-			if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+			if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 				get_tmux_process_id "${mdk_command} ${interface_pursuit_mode_deauth} w -e ${essid} -c ${channel}"
 				dos_pursuit_mode_attack_pid="${global_process_pid}"
 				global_process_pid=""
@@ -4210,7 +4210,7 @@ function launch_dos_pursuit_mode_attack() {
 		;;
 	esac
 
-	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "xterm" ]; then
+	if [ "${SATANA_WINDOWS_HANDLING}" = "xterm" ]; then
 		dos_pursuit_mode_attack_pid=$!
 	fi
 	dos_pursuit_mode_pids+=("${dos_pursuit_mode_attack_pid}")
@@ -4527,12 +4527,12 @@ function mdk_version_toggle() {
 
 	debug_print
 
-	if [ "${AIRGEDDON_MDK_VERSION}" = "mdk3" ]; then
-		sed -ri "s:(AIRGEDDON_MDK_VERSION)=(mdk3):\1=mdk4:" "${rc_path}" 2> /dev/null
-		AIRGEDDON_MDK_VERSION="mdk4"
+	if [ "${SATANA_MDK_VERSION}" = "mdk3" ]; then
+		sed -ri "s:(SATANA_MDK_VERSION)=(mdk3):\1=mdk4:" "${rc_path}" 2> /dev/null
+		SATANA_MDK_VERSION="mdk4"
 	else
-		sed -ri "s:(AIRGEDDON_MDK_VERSION)=(mdk4):\1=mdk3:" "${rc_path}" 2> /dev/null
-		AIRGEDDON_MDK_VERSION="mdk3"
+		sed -ri "s:(SATANA_MDK_VERSION)=(mdk4):\1=mdk3:" "${rc_path}" 2> /dev/null
+		SATANA_MDK_VERSION="mdk3"
 	fi
 
 	set_mdk_version
@@ -4543,7 +4543,7 @@ function set_mdk_version() {
 
 	debug_print
 
-	if [ "${AIRGEDDON_MDK_VERSION}" = "mdk3" ]; then
+	if [ "${SATANA_MDK_VERSION}" = "mdk3" ]; then
 		if ! hash mdk3 2> /dev/null; then
 			echo
 			language_strings "${language}" 636 "red"
@@ -4816,62 +4816,62 @@ function print_options() {
 
 	debug_print
 
-	if "${AIRGEDDON_AUTO_UPDATE:-true}"; then
+	if "${SATANA_AUTO_UPDATE:-true}"; then
 		language_strings "${language}" 451 "blue"
 	else
 		language_strings "${language}" 452 "blue"
 	fi
 
-	if "${AIRGEDDON_SKIP_INTRO:-true}"; then
+	if "${SATANA_SKIP_INTRO:-true}"; then
 		language_strings "${language}" 567 "blue"
 	else
 		language_strings "${language}" 568 "blue"
 	fi
 
-	if "${AIRGEDDON_BASIC_COLORS:-true}"; then
+	if "${SATANA_BASIC_COLORS:-true}"; then
 		language_strings "${language}" 563 "blue"
 	else
 		language_strings "${language}" 564 "blue"
 	fi
 
-	if "${AIRGEDDON_EXTENDED_COLORS:-true}"; then
+	if "${SATANA_EXTENDED_COLORS:-true}"; then
 		language_strings "${language}" 453 "blue"
 	else
 		language_strings "${language}" 454 "blue"
 	fi
 
-	if "${AIRGEDDON_AUTO_CHANGE_LANGUAGE:-true}"; then
+	if "${SATANA_AUTO_CHANGE_LANGUAGE:-true}"; then
 		language_strings "${language}" 474 "blue"
 	else
 		language_strings "${language}" 475 "blue"
 	fi
 
-	if "${AIRGEDDON_SILENT_CHECKS:-true}"; then
+	if "${SATANA_SILENT_CHECKS:-true}"; then
 		language_strings "${language}" 575 "blue"
 	else
 		language_strings "${language}" 576 "blue"
 	fi
 
-	if "${AIRGEDDON_PRINT_HINTS:-true}"; then
+	if "${SATANA_PRINT_HINTS:-true}"; then
 		language_strings "${language}" 582 "blue"
 	else
 		language_strings "${language}" 583 "blue"
 	fi
 
-	if "${AIRGEDDON_5GHZ_ENABLED:-true}"; then
+	if "${SATANA_5GHZ_ENABLED:-true}"; then
 		language_strings "${language}" 594 "blue"
 	else
 		language_strings "${language}" 595 "blue"
 	fi
 
 	reboot_required_text=""
-	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "xterm" ]; then
-		if grep -q "AIRGEDDON_WINDOWS_HANDLING=tmux" "${rc_path}" 2> /dev/null; then
+	if [ "${SATANA_WINDOWS_HANDLING}" = "xterm" ]; then
+		if grep -q "SATANA_WINDOWS_HANDLING=tmux" "${rc_path}" 2> /dev/null; then
 			reboot_required_text="${reboot_required[${language}]}"
 		fi
 		language_strings "${language}" 618 "blue"
 	else
-		if grep -q "AIRGEDDON_WINDOWS_HANDLING=xterm" "${rc_path}" 2> /dev/null; then
+		if grep -q "SATANA_WINDOWS_HANDLING=xterm" "${rc_path}" 2> /dev/null; then
 			reboot_required_text="${reboot_required[${language}]}"
 		fi
 		language_strings "${language}" 619 "blue"
@@ -4880,13 +4880,13 @@ function print_options() {
 	language_strings "${language}" 641 "blue"
 
 	reboot_required_text=""
-	if "${AIRGEDDON_PLUGINS_ENABLED:-true}"; then
-		if grep -q "AIRGEDDON_PLUGINS_ENABLED=false" "${rc_path}" 2> /dev/null; then
+	if "${SATANA_PLUGINS_ENABLED:-true}"; then
+		if grep -q "SATANA_PLUGINS_ENABLED=false" "${rc_path}" 2> /dev/null; then
 			reboot_required_text="${reboot_required[${language}]}"
 		fi
 		language_strings "${language}" 653 "blue"
 	else
-		if grep -q "AIRGEDDON_PLUGINS_ENABLED=true" "${rc_path}" 2> /dev/null; then
+		if grep -q "SATANA_PLUGINS_ENABLED=true" "${rc_path}" 2> /dev/null; then
 			reboot_required_text="${reboot_required[${language}]}"
 		fi
 		language_strings "${language}" 654 "blue"
@@ -5202,13 +5202,13 @@ function dependencies_modifications() {
 
 	debug_print
 
-	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+	if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 		essential_tools_names=("${essential_tools_names[@]/xterm/tmux}")
 		possible_package_names[${essential_tools_names[5]}]="tmux"
 		unset possible_package_names["xterm"]
 	fi
 
-	if [ "${AIRGEDDON_MDK_VERSION}" = "mdk3" ]; then
+	if [ "${SATANA_MDK_VERSION}" = "mdk3" ]; then
 		optional_tools_names=("${optional_tools_names[@]/mdk4/mdk3}")
 		possible_package_names[${optional_tools_names[3]}]="mdk3"
 		unset possible_package_names["mdk4"]
@@ -5340,7 +5340,7 @@ function clean_env_vars() {
 
 	debug_print
 
-	unset AIRGEDDON_AUTO_UPDATE AIRGEDDON_SKIP_INTRO AIRGEDDON_BASIC_COLORS AIRGEDDON_EXTENDED_COLORS AIRGEDDON_AUTO_CHANGE_LANGUAGE AIRGEDDON_SILENT_CHECKS AIRGEDDON_PRINT_HINTS AIRGEDDON_5GHZ_ENABLED AIRGEDDON_FORCE_IPTABLES AIRGEDDON_MDK_VERSION AIRGEDDON_PLUGINS_ENABLED AIRGEDDON_DEVELOPMENT_MODE AIRGEDDON_DEBUG_MODE AIRGEDDON_WINDOWS_HANDLING
+	unset SATANA_AUTO_UPDATE SATANA_SKIP_INTRO SATANA_BASIC_COLORS SATANA_EXTENDED_COLORS SATANA_AUTO_CHANGE_LANGUAGE SATANA_SILENT_CHECKS SATANA_PRINT_HINTS SATANA_5GHZ_ENABLED SATANA_FORCE_IPTABLES SATANA_MDK_VERSION SATANA_PLUGINS_ENABLED SATANA_DEVELOPMENT_MODE SATANA_DEBUG_MODE SATANA_WINDOWS_HANDLING
 }
 
 #Clean temporary files
@@ -5618,14 +5618,14 @@ function print_hint() {
 		;;
 	esac
 
-	if "${AIRGEDDON_PRINT_HINTS:-true}"; then
+	if "${SATANA_PRINT_HINTS:-true}"; then
 		print_simple_separator
 		language_strings "${language}" "${strtoprint}" "hint"
 	fi
 	print_simple_separator
 }
 
-#airgeddon main menu
+#satana main menu
 function main_menu() {
 
 	debug_print
@@ -8688,7 +8688,7 @@ function launch_fake_ap() {
 		esac
 	fi
 	manage_output "-hold -bg \"#000000\" -fg \"#00FF00\" -geometry ${hostapd_scr_window_position} -T \"AP\"" "${command}${log_command}" "AP"
-	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "xterm" ]; then
+	if [ "${SATANA_WINDOWS_HANDLING}" = "xterm" ]; then
 		et_processes+=($!)
 	else
 		get_tmux_process_id "${command}"
@@ -8925,7 +8925,7 @@ function launch_dhcp_server() {
 		;;
 	esac
 	manage_output "-hold -bg \"#000000\" -fg \"#FFC0CB\" -geometry ${dchcpd_scr_window_position} -T \"DHCP\"" "dhcpd -d -cf \"${dhcp_path}\" ${interface} 2>&1 | tee -a ${tmpdir}clts.txt 2>&1" "DHCP"
-	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "xterm" ]; then
+	if [ "${SATANA_WINDOWS_HANDLING}" = "xterm" ]; then
 		et_processes+=($!)
 	else
 		get_tmux_process_id "dhcpd -d -cf \"${dhcp_path}\" ${interface}"
@@ -8983,7 +8983,7 @@ function exec_et_deauth() {
 		pid_control_pursuit_mode "${et_dos_attack}" "evil_twin" &
 	else
 		manage_output "-hold -bg \"#000000\" -fg \"#FF0000\" -geometry ${deauth_scr_window_position} -T \"Deauth\"" "${deauth_et_cmd}" "Deauth"
-		if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "xterm" ]; then
+		if [ "${SATANA_WINDOWS_HANDLING}" = "xterm" ]; then
 			et_processes+=($!)
 		else
 			get_tmux_process_id "${deauth_et_cmd}"
@@ -9499,7 +9499,7 @@ function set_enterprise_control_script() {
 		}
 	EOF
 
-	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+	if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 		cat >&7 <<-EOF
 			function kill_tmux_windows() {
 
@@ -9659,7 +9659,7 @@ function set_enterprise_control_script() {
 				kill_enterprise_windows
 	EOF
 
-	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+	if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 		cat >&7 <<-EOF
 				kill_tmux_windows "Control"
 		EOF
@@ -9735,7 +9735,7 @@ function set_et_control_script() {
 			}
 	EOF
 
-	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+	if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 		cat >&7 <<-EOF
 			function kill_tmux_windows() {
 
@@ -9837,7 +9837,7 @@ function set_et_control_script() {
 				kill_et_windows
 	EOF
 
-	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+	if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 		cat >&7 <<-EOF
 				kill_tmux_windows "Control"
 		EOF
@@ -9985,7 +9985,7 @@ function launch_dns_blackhole() {
 	} >> "${tmpdir}${hosts_file}"
 
 	manage_output "-hold -bg \"#000000\" -fg \"#0000FF\" -geometry ${g4_middleright_window} -T \"DNS\"" "${optional_tools_names[12]} -i ${interface} -f \"${tmpdir}${hosts_file}\"" "DNS"
-	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "xterm" ]; then
+	if [ "${SATANA_WINDOWS_HANDLING}" = "xterm" ]; then
 		et_processes+=($!)
 	else
 		get_tmux_process_id "${optional_tools_names[12]} -i ${interface} -f \"${tmpdir}${hosts_file}\""
@@ -10001,7 +10001,7 @@ function launch_enterprise_control_window() {
 
 	recalculate_windows_sizes
 	manage_output "-hold -bg \"#000000\" -fg \"#FFFFFF\" -geometry ${g1_topright_window} -T \"Control\"" "bash \"${tmpdir}${control_enterprise_file}\"" "Control" "active"
-	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "xterm" ]; then
+	if [ "${SATANA_WINDOWS_HANDLING}" = "xterm" ]; then
 		enterprise_process_control_window=$!
 	else
 		get_tmux_process_id "bash \"${tmpdir}${control_enterprise_file}\""
@@ -10034,7 +10034,7 @@ function launch_et_control_window() {
 		;;
 	esac
 	manage_output "-hold -bg \"#000000\" -fg \"#FFFFFF\" -geometry ${control_scr_window_position} -T \"Control\"" "bash \"${tmpdir}${control_et_file}\"" "Control" "active"
-	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "xterm" ]; then
+	if [ "${SATANA_WINDOWS_HANDLING}" = "xterm" ]; then
 		et_process_control_window=$!
 	else
 		get_tmux_process_id "bash \"${tmpdir}${control_et_file}\""
@@ -10280,7 +10280,7 @@ function launch_webserver() {
 	recalculate_windows_sizes
 	lighttpd_window_position=${g4_bottomright_window}
 	manage_output "-hold -bg \"#000000\" -fg \"#FFFF00\" -geometry ${lighttpd_window_position} -T \"Webserver\"" "lighttpd -D -f \"${tmpdir}${webserver_file}\"" "Webserver"
-	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "xterm" ]; then
+	if [ "${SATANA_WINDOWS_HANDLING}" = "xterm" ]; then
 		et_processes+=($!)
 	else
 		get_tmux_process_id "lighttpd -D -f \"${tmpdir}${webserver_file}\""
@@ -10297,7 +10297,7 @@ function launch_sslstrip() {
 	rm -rf "${tmpdir}${sslstrip_file}" > /dev/null 2>&1
 	recalculate_windows_sizes
 	manage_output "-hold -bg \"#000000\" -fg \"#0000FF\" -geometry ${g4_middleright_window} -T \"Sslstrip\"" "sslstrip -w \"${tmpdir}${sslstrip_file}\" -p -l ${sslstrip_port} -f -k" "Sslstrip"
-	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "xterm" ]; then
+	if [ "${SATANA_WINDOWS_HANDLING}" = "xterm" ]; then
 		et_processes+=($!)
 	else
 		get_tmux_process_id "sslstrip -w \"${tmpdir}${sslstrip_file}\" -p -l ${sslstrip_port} -f -k"
@@ -10326,7 +10326,7 @@ function launch_ettercap_sniffing() {
 	fi
 
 	manage_output "-hold -bg \"#000000\" -fg \"#FFFF00\" -geometry ${sniffing_scr_window_position} -T \"Sniffer\"" "${ettercap_cmd}" "Sniffer"
-	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "xterm" ]; then
+	if [ "${SATANA_WINDOWS_HANDLING}" = "xterm" ]; then
 		et_processes+=($!)
 	else
 		get_tmux_process_id "${ettercap_cmd}"
@@ -10372,7 +10372,7 @@ function set_beef_config() {
 
 	{
 	echo -e "beef:"
-	echo -e "    version: 'airgeddon integrated'"
+	echo -e "    version: 'satana integrated'"
 	echo -e "    debug: false"
 	echo -e "    client_debug: false"
 	echo -e "    crypto_default_value_length: 80"
@@ -10584,7 +10584,7 @@ function fix_beef_executable() {
 	rewrite_script_with_custom_beef "set" "${1}"
 }
 
-#Rewrite airgeddon script in a polymorphic way adding custom beef location to array to get persistence
+#Rewrite satana script in a polymorphic way adding custom beef location to array to get persistence
 function rewrite_script_with_custom_beef() {
 
 	debug_print
@@ -10629,7 +10629,7 @@ function launch_beef() {
 		rm -rf "${beef_path}${beef_file}" > /dev/null 2>&1
 		cp "${tmpdir}${beef_file}" "${beef_path}" > /dev/null 2>&1
 		manage_output "-hold -bg \"#000000\" -fg \"#00FF00\" -geometry ${g4_middleright_window} -T \"BeEF\"" "cd ${beef_path} && ./beef -c \"${beef_file}\"" "BeEF"
-		if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+		if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 			cd "${beef_path}"
 			get_tmux_process_id "./beef -c \"${beef_file}\""
 			et_processes+=("${global_process_pid}")
@@ -10637,14 +10637,14 @@ function launch_beef() {
 		fi
 	else
 		manage_output "-hold -bg \"#000000\" -fg \"#00FF00\" -geometry ${g4_middleright_window} -T \"BeEF\"" "${optional_tools_names[18]}" "BeEF"
-		if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+		if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 			get_tmux_process_id "{optional_tools_names[18]}"
 			et_processes+=("${global_process_pid}")
 			global_process_pid=""
 		fi
 	fi
 
-	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "xterm" ]; then
+	if [ "${SATANA_WINDOWS_HANDLING}" = "xterm" ]; then
 		et_processes+=($!)
 	fi
 
@@ -10670,7 +10670,7 @@ function launch_bettercap_sniffing() {
 	fi
 
 	manage_output "-hold -bg \"#000000\" -fg \"#FFFF00\" -geometry ${sniffing_scr_window_position} -T \"Sniffer+Bettercap-Sslstrip2/BeEF\"" "${bettercap_cmd}" "Sniffer+Bettercap-Sslstrip2/BeEF"
-	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+	if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 		get_tmux_process_id "${bettercap_cmd}"
 		et_processes+=("${global_process_pid}")
 		global_process_pid=""
@@ -10830,7 +10830,7 @@ function kill_et_windows() {
 		kill "$(ps -C hostapd --no-headers -o pid | tr -d ' ')" &> /dev/null
 	fi
 
-	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+	if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 		kill_tmux_windows
 	fi
 }
@@ -11117,7 +11117,7 @@ function capture_handshake_evil_twin() {
 			echo "${bssid}" > "${tmpdir}bl.txt"
 			recalculate_windows_sizes
 			manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_bottomleft_window} -T \"${mdk_command} amok attack\"" "${mdk_command} ${interface} d -b ${tmpdir}bl.txt -c ${channel}" "${mdk_command} amok attack"
-			if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+			if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 				get_tmux_process_id "${mdk_command} ${interface} d -b ${tmpdir}bl.txt -c ${channel}"
 				processidattack="${global_process_pid}"
 				global_process_pid=""
@@ -11128,7 +11128,7 @@ function capture_handshake_evil_twin() {
 			${airmon} start "${interface}" "${channel}" > /dev/null 2>&1
 			recalculate_windows_sizes
 			manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_bottomleft_window} -T \"aireplay deauth attack\"" "aireplay-ng --deauth 0 -a ${bssid} --ignore-negative-one ${interface}" "aireplay deauth attack"
-			if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+			if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 				get_tmux_process_id "aireplay-ng --deauth 0 -a ${bssid} --ignore-negative-one ${interface}"
 				processidattack="${global_process_pid}"
 				global_process_pid=""
@@ -11138,7 +11138,7 @@ function capture_handshake_evil_twin() {
 		"Wds Confusion")
 			recalculate_windows_sizes
 			manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_bottomleft_window} -T \"wids / wips / wds confusion attack\"" "${mdk_command} ${interface} w -e ${essid} -c ${channel}" "wids / wips / wds confusion attack"
-			if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+			if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 				get_tmux_process_id "${mdk_command} ${interface} w -e ${essid} -c ${channel}"
 				processidattack="${global_process_pid}"
 				global_process_pid=""
@@ -11147,7 +11147,7 @@ function capture_handshake_evil_twin() {
 		;;
 	esac
 
-	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "xterm" ]; then
+	if [ "${SATANA_WINDOWS_HANDLING}" = "xterm" ]; then
 		processidattack=$!
 		sleep ${sleeptimeattack} && kill ${processidattack} &> /dev/null
 	else
@@ -11613,7 +11613,7 @@ function dos_handshake_menu() {
 				echo "${bssid}" > "${tmpdir}bl.txt"
 				recalculate_windows_sizes
 				manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_bottomleft_window} -T \"${mdk_command} amok attack\"" "${mdk_command} ${interface} d -b ${tmpdir}bl.txt -c ${channel}" "${mdk_command} amok attack"
-				if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+				if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 					get_tmux_process_id "${mdk_command} ${interface} d -b ${tmpdir}bl.txt -c ${channel}"
 					processidattack="${global_process_pid}"
 					global_process_pid=""
@@ -11631,7 +11631,7 @@ function dos_handshake_menu() {
 				${airmon} start "${interface}" "${channel}" > /dev/null 2>&1
 				recalculate_windows_sizes
 				manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_bottomleft_window} -T \"aireplay deauth attack\"" "aireplay-ng --deauth 0 -a ${bssid} --ignore-negative-one ${interface}" "aireplay deauth attack"
-				if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+				if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 					get_tmux_process_id "aireplay-ng --deauth 0 -a ${bssid} --ignore-negative-one ${interface}"
 					processidattack="${global_process_pid}"
 					global_process_pid=""
@@ -11648,7 +11648,7 @@ function dos_handshake_menu() {
 				capture_handshake_window
 				recalculate_windows_sizes
 				manage_output "+j -bg \"#000000\" -fg \"#FF0000\" -geometry ${g1_bottomleft_window} -T \"wids / wips / wds confusion attack\"" "${mdk_command} ${interface} w -e ${essid} -c ${channel}" "wids / wips / wds confusion attack"
-				if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+				if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 					get_tmux_process_id "${mdk_command} ${interface} w -e ${essid} -c ${channel}"
 					processidattack="${global_process_pid}"
 					global_process_pid=""
@@ -11670,7 +11670,7 @@ function launch_handshake_capture() {
 
 	debug_print
 
-	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "xterm" ]; then
+	if [ "${SATANA_WINDOWS_HANDLING}" = "xterm" ]; then
 		processidattack=$!
 		sleep ${sleeptimeattack} && kill ${processidattack} &> /dev/null
 	else
@@ -11718,7 +11718,7 @@ function capture_handshake_window() {
 	rm -rf "${tmpdir}handshake"* > /dev/null 2>&1
 	recalculate_windows_sizes
 	manage_output "+j -sb -rightbar -geometry ${g1_topright_window} -T \"Capturing Handshake\"" "airodump-ng -c ${channel} -d ${bssid} -w ${tmpdir}handshake ${interface}" "Capturing Handshake" "active"
-	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+	if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 		get_tmux_process_id "airodump-ng -c ${channel} -d ${bssid} -w ${tmpdir}handshake ${interface}"
 		processidcapture="${global_process_pid}"
 		global_process_pid=""
@@ -12849,7 +12849,7 @@ function exit_script_option() {
 	fi
 
 	echo
-	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+	if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 		clean_env_vars
 		no_hardcore_exit=1
 		if ! kill_tmux_session "${session_name}" > /dev/null; then
@@ -12895,7 +12895,7 @@ function hardcore_exit() {
 		echo -e "${green_color} Ok\r${normal_color}"
 	fi
 
-	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+	if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 		clean_env_vars
 		if ! kill_tmux_session "${session_name}"; then
 			exit ${exit_code}
@@ -12923,7 +12923,7 @@ function iptables_nftables_detection() {
 
 	debug_print
 
-	if ! "${AIRGEDDON_FORCE_IPTABLES:-false}"; then
+	if ! "${SATANA_FORCE_IPTABLES:-false}"; then
 		if hash nft 2> /dev/null; then
 			iptables_nftables=1
 		else
@@ -13126,7 +13126,7 @@ function set_script_paths() {
 
 	plugins_paths=(
 					"${scriptfolder}${plugins_dir}"
-					"${user_homedir}.airgeddon/${plugins_dir}"
+					"${user_homedir}.satana/${plugins_dir}"
 				)
 }
 
@@ -13212,7 +13212,7 @@ function update_options_config_file() {
 
 	case "${1}" in
 		"getdata")
-			readarray -t OPTION_VARS < <(grep "AIRGEDDON_" "${rc_path}" 2> /dev/null)
+			readarray -t OPTION_VARS < <(grep "SATANA_" "${rc_path}" 2> /dev/null)
 		;;
 		"writedata")
 			local option_name
@@ -13643,7 +13643,7 @@ function check_root_permissions() {
 	user=$(whoami)
 
 	if [ "${user}" = "root" ]; then
-		if ! "${AIRGEDDON_SILENT_CHECKS:-false}"; then
+		if ! "${SATANA_SILENT_CHECKS:-false}"; then
 			echo
 			language_strings "${language}" 484 "yellow"
 		fi
@@ -13677,7 +13677,7 @@ function check_compatibility() {
 
 	debug_print
 
-	if ! "${AIRGEDDON_SILENT_CHECKS:-false}"; then
+	if ! "${SATANA_SILENT_CHECKS:-false}"; then
 		echo
 		language_strings "${language}" 108 "blue"
 		language_strings "${language}" 115 "read"
@@ -13688,7 +13688,7 @@ function check_compatibility() {
 
 	essential_toolsok=1
 	for i in "${essential_tools_names[@]}"; do
-		if ! "${AIRGEDDON_SILENT_CHECKS:-false}"; then
+		if ! "${SATANA_SILENT_CHECKS:-false}"; then
 			echo -ne "${i}"
 			time_loop
 			if ! hash "${i}" 2> /dev/null; then
@@ -13706,19 +13706,19 @@ function check_compatibility() {
 		fi
 	done
 
-	if ! "${AIRGEDDON_SILENT_CHECKS:-false}"; then
+	if ! "${SATANA_SILENT_CHECKS:-false}"; then
 		echo
 		language_strings "${language}" 218 "blue"
 	fi
 
 	optional_toolsok=1
 	for i in "${!optional_tools[@]}"; do
-		if ! "${AIRGEDDON_SILENT_CHECKS:-false}"; then
+		if ! "${SATANA_SILENT_CHECKS:-false}"; then
 			echo -ne "${i}"
 			time_loop
 		fi
 		if ! hash "${i}" 2> /dev/null; then
-			if ! "${AIRGEDDON_SILENT_CHECKS:-false}"; then
+			if ! "${SATANA_SILENT_CHECKS:-false}"; then
 				echo -ne "${red_color} Error${normal_color}"
 				echo -ne " (${possible_package_names_text[${language}]} : ${possible_package_names[${i}]})"
 				echo -e "\r"
@@ -13728,20 +13728,20 @@ function check_compatibility() {
 			if [ "${i}" = "beef" ]; then
 				detect_fake_beef
 				if [ ${fake_beef_found} -eq 1 ]; then
-					if ! "${AIRGEDDON_SILENT_CHECKS:-false}"; then
+					if ! "${SATANA_SILENT_CHECKS:-false}"; then
 						echo -ne "${red_color} Error${normal_color}"
 						echo -ne " (${possible_package_names_text[${language}]} : ${possible_package_names[${i}]})"
 						echo -e "\r"
 					fi
 					optional_toolsok=0
 				else
-					if ! "${AIRGEDDON_SILENT_CHECKS:-false}"; then
+					if ! "${SATANA_SILENT_CHECKS:-false}"; then
 						echo -e "${green_color} Ok\r${normal_color}"
 					fi
 					optional_tools[${i}]=1
 				fi
 			else
-				if ! "${AIRGEDDON_SILENT_CHECKS:-false}"; then
+				if ! "${SATANA_SILENT_CHECKS:-false}"; then
 					echo -e "${green_color} Ok\r${normal_color}"
 				fi
 				optional_tools[${i}]=1
@@ -13750,15 +13750,15 @@ function check_compatibility() {
 	done
 
 	update_toolsok=1
-	if "${AIRGEDDON_AUTO_UPDATE:-true}"; then
+	if "${SATANA_AUTO_UPDATE:-true}"; then
 
-		if ! "${AIRGEDDON_SILENT_CHECKS:-false}"; then
+		if ! "${SATANA_SILENT_CHECKS:-false}"; then
 			echo
 			language_strings "${language}" 226 "blue"
 		fi
 
 		for i in "${update_tools[@]}"; do
-			if ! "${AIRGEDDON_SILENT_CHECKS:-false}"; then
+			if ! "${SATANA_SILENT_CHECKS:-false}"; then
 				echo -ne "${i}"
 				time_loop
 				if ! hash "${i}" 2> /dev/null; then
@@ -13781,7 +13781,7 @@ function check_compatibility() {
 		echo
 		language_strings "${language}" 111 "red"
 		echo
-		if "${AIRGEDDON_SILENT_CHECKS:-true}"; then
+		if "${SATANA_SILENT_CHECKS:-true}"; then
 			language_strings "${language}" 581 "blue"
 			echo
 		fi
@@ -13791,7 +13791,7 @@ function check_compatibility() {
 
 	compatible=1
 
-	if ! "${AIRGEDDON_SILENT_CHECKS:-false}"; then
+	if ! "${SATANA_SILENT_CHECKS:-false}"; then
 		if [ ${optional_toolsok} -eq 0 ]; then
 			echo
 			language_strings "${language}" 219 "yellow"
@@ -13816,7 +13816,7 @@ function check_bash_version() {
 
 	bashversion="${BASH_VERSINFO[0]}.${BASH_VERSINFO[1]}"
 	if compare_floats_greater_or_equal "${bashversion}" ${minimum_bash_version_required}; then
-		if ! "${AIRGEDDON_SILENT_CHECKS:-false}"; then
+		if ! "${SATANA_SILENT_CHECKS:-false}"; then
 			echo
 			language_strings "${language}" 221 "yellow"
 		fi
@@ -13833,7 +13833,7 @@ function check_update_tools() {
 
 	debug_print
 
-	if "${AIRGEDDON_AUTO_UPDATE:-true}"; then
+	if "${SATANA_AUTO_UPDATE:-true}"; then
 		if [ ${update_toolsok} -eq 1 ]; then
 			autoupdate_check
 		else
@@ -13999,15 +13999,7 @@ function check_xwindow_system() {
 
 	debug_print
 
-	if hash xset 2> /dev/null; then
-		if ! xset -q > /dev/null 2>&1; then
-			if [ "${XDG_SESSION_TYPE}" != "wayland" ]; then
-				if [ "${is_docker}" -eq 0 ]; then
-					xterm_ok=0
-				fi
-			fi
-		fi
-	fi
+	xterm_ok=1
 }
 
 #Detect screen resolution if possible
@@ -14139,20 +14131,20 @@ function recalculate_windows_sizes() {
 function env_vars_initialization() {
 
 	ordered_options_env_vars=(
-									"AIRGEDDON_AUTO_UPDATE" #0
-									"AIRGEDDON_SKIP_INTRO" #1
-									"AIRGEDDON_BASIC_COLORS" #2
-									"AIRGEDDON_EXTENDED_COLORS" #3
-									"AIRGEDDON_AUTO_CHANGE_LANGUAGE" #4
-									"AIRGEDDON_SILENT_CHECKS" #5
-									"AIRGEDDON_PRINT_HINTS" #6
-									"AIRGEDDON_5GHZ_ENABLED" #7
-									"AIRGEDDON_FORCE_IPTABLES" #8
-									"AIRGEDDON_MDK_VERSION" #9
-									"AIRGEDDON_PLUGINS_ENABLED" #10
-									"AIRGEDDON_DEVELOPMENT_MODE" #11
-									"AIRGEDDON_DEBUG_MODE" #12
-									"AIRGEDDON_WINDOWS_HANDLING" #13
+									"SATANA_AUTO_UPDATE" #0
+									"SATANA_SKIP_INTRO" #1
+									"SATANA_BASIC_COLORS" #2
+									"SATANA_EXTENDED_COLORS" #3
+									"SATANA_AUTO_CHANGE_LANGUAGE" #4
+									"SATANA_SILENT_CHECKS" #5
+									"SATANA_PRINT_HINTS" #6
+									"SATANA_5GHZ_ENABLED" #7
+									"SATANA_FORCE_IPTABLES" #8
+									"SATANA_MDK_VERSION" #9
+									"SATANA_PLUGINS_ENABLED" #10
+									"SATANA_DEVELOPMENT_MODE" #11
+									"SATANA_DEBUG_MODE" #12
+									"SATANA_WINDOWS_HANDLING" #13
 									)
 
 	declare -gA nonboolean_options_env_vars
@@ -14167,7 +14159,7 @@ function env_vars_initialization() {
 	boolean_options_env_vars["${ordered_options_env_vars[1]},default_value"]="false" #skip_intro
 	boolean_options_env_vars["${ordered_options_env_vars[2]},default_value"]="true" #basic_colors
 	boolean_options_env_vars["${ordered_options_env_vars[3]},default_value"]="true" #extended_colors
-	boolean_options_env_vars["${ordered_options_env_vars[4]},default_value"]="true" #auto_change_language
+	boolean_options_env_vars["${ordered_options_env_vars[4]},default_value"]="false" #auto_change_language
 	boolean_options_env_vars["${ordered_options_env_vars[5]},default_value"]="false" #silent_checks
 	boolean_options_env_vars["${ordered_options_env_vars[6]},default_value"]="true" #print_hints
 	boolean_options_env_vars["${ordered_options_env_vars[7]},default_value"]="true" #5ghz_enabled
@@ -14239,12 +14231,12 @@ function env_vars_values_validation() {
 	done
 
 	for item in "${ARRAY_ENV_NONBOOLEAN_VARS_ELEMENTS[@]}"; do
-		if [ "${item}" = "AIRGEDDON_WINDOWS_HANDLING" ]; then
+		if [ "${item}" = "SATANA_WINDOWS_HANDLING" ]; then
 			if ! [[ "${!item,,}" =~ ^(xterm|tmux)$ ]]; then
 				errors_on_configuration_vars["${item},invalid_value"]="${nonboolean_options_env_vars[${item},'default_value']}"
 				eval "export ${item}=${nonboolean_options_env_vars[${item},'default_value']}"
 			fi
-		elif [ "${item}" = "AIRGEDDON_MDK_VERSION" ]; then
+		elif [ "${item}" = "SATANA_MDK_VERSION" ]; then
 			if ! [[ "${!item,,}" =~ ^(mdk3|mdk4)$ ]]; then
 				errors_on_configuration_vars["${item},invalid_value"]="${nonboolean_options_env_vars[${item},'default_value']}"
 				eval "export ${item}=${nonboolean_options_env_vars[${item},'default_value']}"
@@ -14252,7 +14244,7 @@ function env_vars_values_validation() {
 		fi
 	done
 
-	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+	if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 		if hash tmux 2> /dev/null; then
 			transfer_to_tmux
 			if ! check_inside_tmux; then
@@ -14326,7 +14318,7 @@ function create_rcfile() {
 	done
 }
 
-#Detect if airgeddon is working inside a docker container
+#Detect if satana is working inside a docker container
 function docker_detection() {
 
 	debug_print
@@ -14342,7 +14334,7 @@ function initialize_extended_colorized_output() {
 	debug_print
 
 	colorize=""
-	if "${AIRGEDDON_BASIC_COLORS:-true}" && "${AIRGEDDON_EXTENDED_COLORS:-true}"; then
+	if "${SATANA_BASIC_COLORS:-true}" && "${SATANA_EXTENDED_COLORS:-true}"; then
 		if hash ccze 2> /dev/null; then
 			colorize="| ccze -A"
 		fi
@@ -14354,7 +14346,7 @@ function remap_colors() {
 
 	debug_print
 
-	if ! "${AIRGEDDON_BASIC_COLORS:-true}"; then
+	if ! "${SATANA_BASIC_COLORS:-true}"; then
 		green_color="${normal_color}"
 		green_color_title="${normal_color}"
 		red_color="${normal_color}"
@@ -14388,7 +14380,7 @@ function initialize_colors() {
 	white_color="\e[1;97m"
 }
 
-#Kill tmux session started by airgeddon
+#Kill tmux session started by satana
 function kill_tmux_session() {
 
 	debug_print
@@ -14401,8 +14393,8 @@ function kill_tmux_session() {
 	fi
 }
 
-#Starting point of airgeddon script inside newly created tmux session
-function start_airgeddon_from_tmux() {
+#Starting point of satana script inside newly created tmux session
+function start_satana_from_tmux() {
 
 	debug_print
 
@@ -14416,7 +14408,7 @@ function start_airgeddon_from_tmux() {
 	fi
 }
 
-#Create new tmux session exclusively for airgeddon
+#Create new tmux session exclusively for satana
 function create_tmux_session() {
 
 	debug_print
@@ -14425,10 +14417,10 @@ function create_tmux_session() {
 
 	if [ "${2}" = "true" ]; then
 		tmux new-session -d -s "${1}"
-		start_airgeddon_from_tmux "normal"
+		start_satana_from_tmux "normal"
 	else
 		tmux new-session -d -s "${1}"
-		start_airgeddon_from_tmux "nested"
+		start_satana_from_tmux "nested"
 	fi
 }
 
@@ -14479,12 +14471,12 @@ function check_inside_tmux() {
 
 #Close any existing tmux session before opening, to avoid conflicts
 #shellcheck disable=SC2009
-function close_existing_airgeddon_tmux_session() {
+function close_existing_satana_tmux_session() {
 
 	debug_print
 
 	if ! check_inside_tmux; then
-		eval "kill -9 $(ps --no-headers aux | grep -i 'tmux.*airgeddon' | awk '{print $2}' | tr '\n' ' ') > /dev/null 2>&1"
+		eval "kill -9 $(ps --no-headers aux | grep -i 'tmux.*satana' | awk '{print $2}' | tr '\n' ' ') > /dev/null 2>&1"
 	fi
 }
 
@@ -14493,7 +14485,7 @@ function transfer_to_tmux() {
 
 	debug_print
 
-	close_existing_airgeddon_tmux_session
+	close_existing_satana_tmux_session
 
 	if ! check_inside_tmux; then
 		create_tmux_session "${session_name}" "true"
@@ -14552,7 +14544,7 @@ function wait_for_process() {
 		sleep 0.2
 	done
 
-	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+	if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 		tmux kill-window -t "${session_name}:${2}"
 	fi
 }
@@ -14563,7 +14555,7 @@ function get_tmux_process_id() {
 
 	debug_print
 
-	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "tmux" ]; then
+	if [ "${SATANA_WINDOWS_HANDLING}" = "tmux" ]; then
 
 		local process_cmd_line
 		local process_pid
@@ -14593,7 +14585,7 @@ function manage_output() {
 	window_name="${3}"
 	command_tail=" > /dev/null 2>&1 &"
 
-	case "${AIRGEDDON_WINDOWS_HANDLING}" in
+	case "${SATANA_WINDOWS_HANDLING}" in
 		"tmux")
 			local tmux_color
 			tmux_color=""
@@ -14647,13 +14639,13 @@ function parse_plugins() {
 function validate_plugin_requirements() {
 
 	if [ -n "${plugin_minimum_ag_affected_version}" ]; then
-		if compare_floats_greater_than "${plugin_minimum_ag_affected_version}" "${airgeddon_version}"; then
+		if compare_floats_greater_than "${plugin_minimum_ag_affected_version}" "${satana_version}"; then
 			return 1
 		fi
 	fi
 
 	if [ -n "${plugin_maximum_ag_affected_version}" ]; then
-		if compare_floats_greater_than "${airgeddon_version}" "${plugin_maximum_ag_affected_version}"; then
+		if compare_floats_greater_than "${satana_version}" "${plugin_maximum_ag_affected_version}"; then
 			return 1
 		fi
 	fi
@@ -14874,7 +14866,7 @@ function validate_et_internet_interface() {
 	return 0
 }
 
-#Check for access to airgeddon repository
+#Check for access to satana repository
 function check_repository_access() {
 
 	debug_print
@@ -14982,16 +14974,16 @@ function autoupdate_check() {
 
 	if check_repository_access; then
 		local version_checked=0
-		airgeddon_last_version=$(timeout -s SIGTERM 15 curl -L ${urlscript_directlink} 2> /dev/null | grep "airgeddon_version=" | head -n 1 | cut -d "\"" -f 2)
+		satana_last_version=$(timeout -s SIGTERM 15 curl -L ${urlscript_directlink} 2> /dev/null | grep "satana_version=" | head -n 1 | cut -d "\"" -f 2)
 
-		if [ -n "${airgeddon_last_version}" ]; then
+		if [ -n "${satana_last_version}" ]; then
 			version_checked=1
 		else
 			http_proxy_detect
 			if [ "${http_proxy_set}" -eq 1 ]; then
 
-				airgeddon_last_version=$(timeout -s SIGTERM 15 curl --proxy "${http_proxy}" -L ${urlscript_directlink} 2> /dev/null | grep "airgeddon_version=" | head -n 1 | cut -d "\"" -f 2)
-				if [ -n "${airgeddon_last_version}" ]; then
+				satana_last_version=$(timeout -s SIGTERM 15 curl --proxy "${http_proxy}" -L ${urlscript_directlink} 2> /dev/null | grep "satana_version=" | head -n 1 | cut -d "\"" -f 2)
+				if [ -n "${satana_last_version}" ]; then
 					version_checked=1
 				else
 					language_strings "${language}" 5 "yellow"
@@ -15002,7 +14994,7 @@ function autoupdate_check() {
 		fi
 
 		if [ "${version_checked}" -eq 1 ]; then
-			if compare_floats_greater_than "${airgeddon_last_version}" "${airgeddon_version}"; then
+			if compare_floats_greater_than "${satana_last_version}" "${satana_version}"; then
 				language_strings "${language}" 213 "yellow"
 				download_last_version
 			else
@@ -15212,7 +15204,7 @@ function main() {
 	detect_distro_phase2
 	special_distro_features
 
-	if "${AIRGEDDON_AUTO_CHANGE_LANGUAGE:-true}"; then
+	if "${SATANA_AUTO_CHANGE_LANGUAGE:-true}"; then
 		autodetect_language
 	fi
 
@@ -15221,7 +15213,7 @@ function main() {
 	set_mdk_version
 	dependencies_modifications
 
-	if "${AIRGEDDON_PLUGINS_ENABLED:-true}"; then
+	if "${SATANA_PLUGINS_ENABLED:-true}"; then
 		parse_plugins
 		apply_plugin_functions_rewriting
 	fi
@@ -15244,7 +15236,7 @@ function main() {
 		exit ${exit_code}
 	fi
 
-	if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "xterm" ]; then
+	if [ "${SATANA_WINDOWS_HANDLING}" = "xterm" ]; then
 		check_xwindow_system
 		detect_screen_resolution
 	fi
@@ -15252,8 +15244,8 @@ function main() {
 	set_possible_aliases
 	initialize_optional_tools_values
 
-	if ! "${AIRGEDDON_DEVELOPMENT_MODE:-false}"; then
-		if ! "${AIRGEDDON_SKIP_INTRO:-false}"; then
+	if ! "${SATANA_DEVELOPMENT_MODE:-false}"; then
+		if ! "${SATANA_SKIP_INTRO:-false}"; then
 			language_strings "${language}" 86 "title"
 			language_strings "${language}" 6 "blue"
 			echo
@@ -15280,7 +15272,7 @@ function main() {
 		check_bash_version
 		check_root_permissions
 
-		if [ "${AIRGEDDON_WINDOWS_HANDLING}" = "xterm" ]; then
+		if [ "${SATANA_WINDOWS_HANDLING}" = "xterm" ]; then
 			echo
 			if [[ ${resolution_detected} -eq 1 ]] && [[ "${xterm_ok}" -eq 1 ]]; then
 				language_strings "${language}" 294 "blue"
